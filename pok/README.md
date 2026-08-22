@@ -66,7 +66,45 @@ only work against `api-staging.pokpay.io`, production keys only against
 Nothing from this step goes in the repo. The three values are set as Worker
 secrets in step 2.
 
-### 2. Deploy the Worker
+### 2. Deploy the service
+
+Two builds of the same endpoint are in this folder. Pick one:
+
+- **`server.js` + `Dockerfile`** — plain Node container, for Coolify. Use this
+  if the site is already on Coolify.
+- **`worker.js` + `wrangler.toml`** — Cloudflare Worker. Same routes.
+
+#### Coolify
+
+In the Coolify dashboard, on the same server as the site:
+
+1. **New Resource → Application → Docker / Dockerfile**, pointing at this repo.
+2. Set **Base Directory** to `/pok` so it builds this folder's `Dockerfile`.
+3. Environment variables:
+
+   | Key | Value |
+   |---|---|
+   | `POK_KEY_ID` | from the dashboard |
+   | `POK_KEY_SECRET` | from the dashboard — mark it **secret** |
+   | `POK_MERCHANT_ID` | from the dashboard |
+   | `POK_ENV` | `production` |
+   | `ALLOWED_ORIGINS` | the site's origin, e.g. `https://goldea.ai` |
+
+4. Port **3000**. Health check path **`/health`**.
+5. Give it a domain — either a subdomain (`pok.<site>`) or a path route on the
+   site's domain.
+
+Then confirm it is up:
+
+```sh
+curl https://<service-domain>/health
+# {"ok":true,"env":"https://api.pokpay.io"}
+```
+
+`ALLOWED_ORIGINS` matters: it is an explicit allowlist, not a wildcard, so any
+other site trying to create orders against this merchant account is refused.
+
+#### Cloudflare Workers
 
 ```sh
 cd pok
@@ -77,20 +115,28 @@ npx wrangler secret put POK_MERCHANT_ID
 npx wrangler deploy
 ```
 
-Secrets are prompted for and stored by Cloudflare. They are never written to
-this repo — do not add them to `wrangler.toml`.
+Secrets are prompted for and stored by Cloudflare. Either way they are never
+written to this repo — do not put them in `wrangler.toml`.
 
 ### 3. Point the page at it
 
-In `checkout.html`, set `WORKER_URL` to the deployed Worker origin:
+In `checkout.html`, near the bottom:
 
 ```js
-var WORKER_URL = 'https://visionfx-pok.<subdomain>.workers.dev';
+var POK_API = '';   // '' = same origin
 ```
 
-Then add the site's own origin to `ALLOWED_ORIGINS` in `wrangler.toml` and
-redeploy. Anything not on that list is refused — that is deliberate, it stops
-other sites creating orders against the merchant account.
+Leave it empty **only** if the site proxies `/api/pok/*` to the container. If
+the service has its own domain, set it:
+
+```js
+var POK_API = 'https://pok.goldea.ai';
+```
+
+and make sure that origin's `ALLOWED_ORIGINS` includes the site.
+
+If the service is unreachable the card option fails politely and points the
+customer at PayPal, which never depends on it.
 
 ## Before going live
 
@@ -132,12 +178,19 @@ docs do not say, and the default is a guess until someone checks.
 
 ## Note on the buy buttons
 
-The live buy buttons on `index.html` and `gold-ea-bot.html` still go straight
-to PayPal, which works today. They are deliberately left alone until Pok has
-been tested end to end — the last change to those links cost a day of sales.
+The buy buttons on `index.html` (1) and `gold-ea-bot.html` (4) now point at
+`checkout.html`, which offers PayPal and card side by side.
 
-`checkout.html` is reachable directly for testing and is `noindex`, so nothing
-customer-facing changes until someone repoints those buttons.
+PayPal on that page is a plain link to the same URL the buttons used before, so
+it keeps working whether or not the Pok service is deployed, reachable, or
+configured. Card is the only thing that depends on the container.
+
+If the checkout page ever needs to be taken out of the path, point those five
+links straight back at:
+
+```
+https://www.paypal.com/ncp/payment/J4CL6SY9AAH9Y
+```
 
 ## Troubleshooting
 

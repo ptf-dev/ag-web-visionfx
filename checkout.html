@@ -134,12 +134,17 @@ h2{
 <script>
 (function () {
   /* ----------------------------------------------------------------
-     Point this at the deployed Cloudflare Worker (see pok/README.md).
-     While it is empty the Pok option stays disabled and PayPal — which
-     works today — is untouched.
+     Where the Pok order service lives (pok/server.js, see pok/README.md).
+
+     ''  = same origin, i.e. this site proxies /api/pok/* to the container.
+     Otherwise set the service's own origin, e.g.
+       var POK_API = 'https://pok.example.com';
+
+     If the service is unreachable the card option fails politely and
+     points the customer at PayPal, which never depends on it.
   ---------------------------------------------------------------- */
-  var WORKER_URL = '';
-  var POK_ENV    = 'staging';   // flip to 'production' with production keys
+  var POK_API    = '';
+  var POK_ENV    = 'production';
   var POK_LOCALE = 'al';
 
   var tabs  = document.querySelectorAll('.method');
@@ -162,9 +167,9 @@ h2{
     });
   });
 
-  if (!WORKER_URL) {
+  if (typeof PokPayment === 'undefined') {
     start.disabled = true;
-    say('Card payment is not switched on yet. Use PayPal above.');
+    say('Card payment is unavailable right now. Use PayPal above.');
     return;
   }
 
@@ -173,8 +178,8 @@ h2{
     say('Preparing secure form…');
 
     try {
-      // The amount is decided by the Worker, never sent from here.
-      var res = await fetch(WORKER_URL + '/api/pok/order', { method: 'POST' });
+      // The amount is decided by the server, never sent from here.
+      var res = await fetch(POK_API + '/api/pok/order', { method: 'POST' });
       if (!res.ok) throw new Error('order');
       var orderId = (await res.json()).orderId;
       if (!orderId) throw new Error('order');
@@ -189,7 +194,7 @@ h2{
           // Don't trust the callback alone — ask the Worker what the order
           // actually says before telling anyone they've paid.
           try {
-            var check = await fetch(WORKER_URL + '/api/pok/order/' + orderId);
+            var check = await fetch(POK_API + "/api/pok/order/" + orderId);
             var order = await check.json();
             var paid = order && (order.capturedAmount > 0 || /paid|captur|success|complete/i.test(order.status || ''));
             if (!paid) throw new Error('unconfirmed');

@@ -1,0 +1,13 @@
+{
+  "name": "visionfx-pok",
+  "private": true,
+  "type": "module",
+  "description": "Pok Payments order endpoint for the Vision FX checkout",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
