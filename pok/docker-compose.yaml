@@ -1,0 +1,49 @@
+# Coolify: New Resource -> Docker Compose -> this repo
+#   Base Directory:      /pok
+#   Compose file:        docker-compose.yaml
+#
+# Coolify reads the ${...} names below and shows them as fields to fill in, so
+# the service, port and health check do not have to be configured by hand.
+# Values for them are in README.md; none of them belong in this repo.
+
+services:
+  payments:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+
+    environment:
+      # Pok — card
+      POK_ENV: production
+      POK_KEY_ID: ${POK_KEY_ID}
+      POK_KEY_SECRET: ${POK_KEY_SECRET}
+      POK_MERCHANT_ID: ${POK_MERCHANT_ID}
+
+      # NowPayments — crypto. Leave the key blank and crypto simply stays off;
+      # the checkout reads /health and hides what is not configured.
+      NOWPAYMENTS_API_KEY: ${NOWPAYMENTS_API_KEY}
+      NOWPAYMENTS_IPN_SECRET: ${NOWPAYMENTS_IPN_SECRET}
+      NOWPAYMENTS_IPN_URL: ${NOWPAYMENTS_IPN_URL}
+      NOWPAYMENTS_SUCCESS_URL: ${NOWPAYMENTS_SUCCESS_URL}
+
+      # Who may create orders. Explicit list, never a wildcard.
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
+
+      PORT: 3000
+
+    # Coolify's proxy reaches this over the internal network, so the port is
+    # not published to the host.
+    expose:
+      - "3000"
+
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

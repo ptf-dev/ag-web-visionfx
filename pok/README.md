@@ -108,7 +108,28 @@ Then add the routing it prints, and `curl https://anduelgega.com/health` to
 confirm. The card and crypto buttons switch themselves on from that response;
 no site redeploy is needed.
 
-#### Coolify UI
+#### Coolify UI (fewest steps)
+
+`docker-compose.yaml` in this folder declares the service, port and health
+check, so Coolify only has to be told where it is and what the secrets are:
+
+1. **New Resource → Docker Compose**, repository `ptf-dev/ag-web-visionfx`
+2. **Base Directory** `/pok`, compose file `docker-compose.yaml`
+3. Coolify reads the `${...}` names and shows them as fields. Fill in:
+   `POK_KEY_ID`, `POK_KEY_SECRET`, `POK_MERCHANT_ID`,
+   `NOWPAYMENTS_API_KEY`, `NOWPAYMENTS_IPN_SECRET`,
+   `ALLOWED_ORIGINS` = `https://anduelgega.com`
+   (the two `NOWPAYMENTS_*_URL` ones can wait until the service has a domain)
+4. Deploy, then give it a domain — or route `/api/pok/` and
+   `/api/nowpayments/` on the site's domain to it.
+
+`curl https://<domain>/health` should answer
+`{"ok":true,...,"providers":{"card":true,"crypto":true}}`.
+
+Once this resource exists, pushes to `main` redeploy it like they already
+redeploy the site.
+
+#### Coolify UI, configured by hand
 
 In the Coolify dashboard, on the same server as the site:
 
