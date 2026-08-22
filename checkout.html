@@ -167,11 +167,25 @@ h2{
     });
   });
 
-  if (typeof PokPayment === 'undefined') {
+  function unavailable() {
     start.disabled = true;
     say('Card payment is unavailable right now. Use PayPal above.');
-    return;
   }
+
+  if (typeof PokPayment === 'undefined') { unavailable(); return; }
+
+  /* Only offer the card button once the order service actually answers.
+     Without this it looks live whenever the SDK loads, and only fails after
+     someone has already committed to paying by card. PayPal is unaffected. */
+  start.disabled = true;
+  fetch(POK_API + '/health', { cache: 'no-store' })
+    .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+    .then(function (h) {
+      if (!h || h.ok !== true) throw 0;
+      start.disabled = false;
+      note.hidden = true;
+    })
+    .catch(unavailable);
 
   start.addEventListener('click', async function () {
     start.disabled = true;
