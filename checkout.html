@@ -74,6 +74,9 @@ h2{
 }
 .pay-btn:hover{background:rgba(230,180,90,.2)}
 .pay-btn[disabled]{opacity:.45;cursor:not-allowed}
+/* display:block above outranks the UA rule for [hidden], so say it here or a
+   hidden pay button stays on screen. */
+.pay-btn[hidden]{display:none}
 
 .hint{margin-top:.75rem;font-size:.78rem;color:var(--ink-mute)}
 #pok-form{margin-top:1rem}
@@ -122,6 +125,9 @@ h2{
   </section>
 
   <section class="panel" id="panel-pok">
+    <a class="pay-btn" id="pok-link" href="#" target="_blank" rel="noopener" hidden>Pay by card</a>
+    <p class="hint" id="pok-link-hint" hidden>You'll finish the payment on Pok's
+      secure page, then return here.</p>
     <button class="pay-btn" id="pok-start">Pay by card</button>
     <div id="pok-form"></div>
     <p class="note" id="pok-note" hidden></p>
@@ -154,6 +160,22 @@ h2{
   var POK_API    = '';
   var POK_ENV    = 'production';
   var POK_LOCALE = 'al';
+
+  /* ----------------------------------------------------------------
+     FASTEST WAY TO TURN CARD PAYMENT ON — no server, no deploy.
+
+     Paste a payment link created in the POK Merchant app ("Si te krijoni
+     nje link pagese nga POK Merchant"). The Card tab then becomes a plain
+     link, exactly like PayPal, and works immediately.
+
+     It MUST be a reusable merchant payment link. A single-use
+     pay.pokpay.io/sdk-orders/<uuid> URL is what broke before: that kind of
+     order is consumed once, after which every visitor got
+     "Nuk u gjet asnjë porosi!" and a day of sales was lost.
+
+     Leave empty to use the payments container instead (pok/README.md).
+  ---------------------------------------------------------------- */
+  var POK_PAY_LINK = '';
 
   var tabs  = document.querySelectorAll('.method');
   var note  = document.getElementById('pok-note');
@@ -193,13 +215,26 @@ h2{
     sayCrypto('Crypto payment is unavailable right now. Use PayPal above.');
   }
 
+  /* A merchant payment link needs no server and no SDK, so when one is set the
+     Card tab becomes a plain link like PayPal and skips the probe entirely.
+     Crypto still depends on the service either way. */
+  var cardViaLink = Boolean(POK_PAY_LINK);
+
+  if (cardViaLink) {
+    var link = document.getElementById('pok-link');
+    link.href = POK_PAY_LINK;
+    link.hidden = false;
+    document.getElementById('pok-link-hint').hidden = false;
+    start.hidden = true;
+  }
+
   var sdkReady = typeof PokPayment !== 'undefined';
 
-  /* Both non-PayPal methods stay disabled until the payment service answers
-     and says it has that provider configured. Without this they look live and
-     only fail once someone has committed to paying that way. PayPal is a
-     plain link and never depends on any of this. */
-  start.disabled = true;
+  /* Whatever still depends on the service stays disabled until it answers and
+     says that provider is configured. Without this a method looks live and
+     only fails once someone has committed to paying that way. PayPal — and a
+     card payment link — are plain links and never depend on any of this. */
+  if (!cardViaLink) start.disabled = true;
   cryptoStart.disabled = true;
 
   fetch(POK_API + '/health', { cache: 'no-store' })
@@ -207,12 +242,14 @@ h2{
     .then(function (h) {
       if (!h || h.ok !== true) throw 0;
       var p = h.providers || {};
-      if (sdkReady && p.card !== false) { start.disabled = false; note.hidden = true; }
-      else cardOff();
+      if (!cardViaLink) {
+        if (sdkReady && p.card !== false) { start.disabled = false; note.hidden = true; }
+        else cardOff();
+      }
       if (p.crypto) { cryptoStart.disabled = false; cryptoNote.hidden = true; }
       else cryptoOff();
     })
-    .catch(function () { cardOff(); cryptoOff(); });
+    .catch(function () { if (!cardViaLink) cardOff(); cryptoOff(); });
 
   cryptoStart.addEventListener('click', async function () {
     cryptoStart.disabled = true;
@@ -230,7 +267,9 @@ h2{
     }
   });
 
-  if (!sdkReady) cardOff();
+  // A payment link needs no SDK, so only complain about a missing SDK when the
+  // card path actually depends on it.
+  if (!cardViaLink && !sdkReady) cardOff();
 
   start.addEventListener('click', async function () {
     start.disabled = true;
