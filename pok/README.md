@@ -27,12 +27,35 @@ Worker does.
 
 ### 1. Get credentials
 
-POK Business dashboard → **E-payments** → **API Keys** → create a key.
-You need `keyId`, `keySecret`, and the `merchantId` for that key pair.
+Log in to **POK Business** on desktop (business.pokpay.io — the same account as
+the POK Business phone app, but the API keys screen is web only).
+
+In the left sidebar, the menu Pok's docs call **E-payments** is the second item,
+and it is translated to whatever language the dashboard is set to:
+
+| Dashboard language | Sidebar item |
+|---|---|
+| Albanian (`AL`) | **Pagesat online** |
+| English (`EN`) | **Online payments** |
+| Italian (`IT`) | **Pagamenti online** |
+
+The language switcher is the row of flags at the bottom of the sidebar, below
+*Mercato / Tregu / Market*.
+
+Open that menu → **API Keys** → create a key. Copy all three values:
+
+- `keyId`
+- `keySecret` — shown **once**, at creation. If it is lost, create a new key.
+- `merchantId` — must be the merchant this key pair belongs to, or order
+  creation returns `403`.
 
 Staging and production credentials are **not** interchangeable — staging keys
 only work against `api-staging.pokpay.io`, production keys only against
-`api.pokpay.io`.
+`api.pokpay.io`. Create staging keys first; the checklist below runs entirely
+on staging.
+
+Nothing from this step goes in the repo. The three values are set as Worker
+secrets in step 2.
 
 ### 2. Deploy the Worker
 
