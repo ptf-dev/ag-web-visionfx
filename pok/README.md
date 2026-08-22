@@ -87,7 +87,28 @@ Two builds of the same endpoint are in this folder. Pick one:
   if the site is already on Coolify.
 - **`worker.js` + `wrangler.toml`** — Cloudflare Worker. Same routes.
 
-#### Coolify
+#### One command on the server
+
+`deploy.sh` does the whole thing — builds, runs, waits for health, and prints
+the routing step that is left. Run it on the box, from this folder:
+
+```sh
+cd ag-web-visionfx/pok
+POK_KEY_ID=... POK_KEY_SECRET=... POK_MERCHANT_ID=... \
+NOWPAYMENTS_API_KEY=... NOWPAYMENTS_IPN_SECRET=... \
+./deploy.sh
+```
+
+It binds the container to `127.0.0.1:3000` rather than a public port, so the
+service is only reachable through the site's own proxy. It never touches the
+site, nginx or Traefik — if the container fails to start it says so and exits
+non-zero, and the checkout simply keeps falling back to PayPal.
+
+Then add the routing it prints, and `curl https://anduelgega.com/health` to
+confirm. The card and crypto buttons switch themselves on from that response;
+no site redeploy is needed.
+
+#### Coolify UI
 
 In the Coolify dashboard, on the same server as the site:
 
