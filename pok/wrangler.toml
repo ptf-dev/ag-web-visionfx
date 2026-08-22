@@ -1,0 +1,21 @@
+name = "visionfx-pok"
+main = "worker.js"
+compatibility_date = "2026-08-01"
+
+# Staging is the default so an accidental deploy cannot charge a real card.
+# Flip to "production" only after the staging run in README.md passes.
+[vars]
+POK_ENV = "staging"
+
+# Origins allowed to create orders. Add the real site origin before going
+# live; anything not listed here is refused by CORS.
+ALLOWED_ORIGINS = "http://localhost:8788"
+
+# Set once the Worker has a public URL:
+#   POK_WEBHOOK_URL  = "https://visionfx-pok.<subdomain>.workers.dev/api/pok/webhook"
+#   POK_REDIRECT_URL = "https://<site>/checkout.html?paid=1"
+
+# Secrets are NOT set here. Use:
+#   wrangler secret put POK_KEY_ID
+#   wrangler secret put POK_KEY_SECRET
+#   wrangler secret put POK_MERCHANT_ID
