@@ -1035,7 +1035,39 @@ creative solutions, and measurable outcomes." data-framer-component-type="RichTe
 </svg>
 </div>
 	<!-- Start of bodyEnd -->
-    
+    <script>
+    /* Labels the buy CTAs with the payment methods now available at checkout.
+       Added from here rather than inline in the markup above: that markup is
+       server-rendered by Framer and hydrated by React, and an extra element
+       inside it risks a hydration mismatch that React resolves by throwing the
+       subtree away. Running after hydration avoids that entirely.
+       Idempotent, and re-applies if Framer re-renders the CTA. */
+    (function () {
+      var CSS = 'margin:8px 0 0;font-family:inherit;font-size:12px;font-weight:600;' +
+                'letter-spacing:.08em;text-transform:uppercase;color:rgb(251,189,35);' +
+                'opacity:.9;text-align:center';
+      function decorate() {
+        var ctas = document.querySelectorAll('a[href="checkout.html"]');
+        for (var i = 0; i < ctas.length; i++) {
+          var a = ctas[i], next = a.nextElementSibling;
+          if (next && next.classList && next.classList.contains('vfx-pays')) continue;
+          var p = document.createElement('p');
+          p.className = 'vfx-pays';
+          // Escaped separator, not a literal middot: survives the page being
+          // served without a charset header, which would garble it.
+          p.textContent = 'PayPal \u00B7 Card \u00B7 Crypto';
+          p.setAttribute('style', CSS);
+          a.parentNode.insertBefore(p, a.nextSibling);
+        }
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', decorate);
+      } else { decorate(); }
+      window.addEventListener('load', decorate);
+      // Framer hydrates after load; re-check briefly rather than guessing when.
+      var n = 0, t = setInterval(function () { decorate(); if (++n > 12) clearInterval(t); }, 400);
+    })();
+    </script>
     <!-- End of bodyEnd -->
 </body>
 </html>

@@ -17,6 +17,7 @@
  */
 
 import { createServer } from 'node:http';
+import { createHmac, timingSafeEqual } from 'node:crypto';
 
 /**
  * The price is fixed here, on the server, on purpose. If the browser were
@@ -48,6 +49,11 @@ const API = {
   production: 'https://api.pokpay.io',
 };
 const BASE = API[process.env.POK_ENV === 'staging' ? 'staging' : 'production'];
+
+/* NowPayments (crypto). Unlike Pok its unit is unambiguous — the API echoes
+   back price_amount "1" / price_currency "EUR", i.e. plain euros. */
+const NOWPAY_API = 'https://api.nowpayments.io/v1';
+const NOWPAY_ENABLED = Boolean(process.env.NOWPAYMENTS_API_KEY);
 
 const ALLOWED = (process.env.ALLOWED_ORIGINS || '')
   .split(',')
@@ -153,6 +159,66 @@ async function readOrder(res, orderId) {
   });
 }
 
+/* ----------------------------------------------------------- nowpayments */
+
+async function createInvoice(res) {
+  if (!NOWPAY_ENABLED) return send(res, 503, { error: 'crypto_not_configured' });
+
+  const r = await fetch(`${NOWPAY_API}/invoice`, {
+    method: 'POST',
+    headers: {
+      'x-api-key': process.env.NOWPAYMENTS_API_KEY,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      // Same server-side price as the card path — never taken from the browser.
+      price_amount: PRICE_EUR,
+      price_currency: 'eur',
+      order_id: `visionfx-${Date.now()}`,
+      order_description: PRODUCT.label,
+      ...(process.env.NOWPAYMENTS_IPN_URL ? { ipn_callback_url: process.env.NOWPAYMENTS_IPN_URL } : {}),
+      ...(process.env.NOWPAYMENTS_SUCCESS_URL ? { success_url: process.env.NOWPAYMENTS_SUCCESS_URL } : {}),
+      ...(process.env.NOWPAYMENTS_CANCEL_URL ? { cancel_url: process.env.NOWPAYMENTS_CANCEL_URL } : {}),
+    }),
+  });
+
+  const body = await r.json().catch(() => null);
+  if (!r.ok || !body?.invoice_url) {
+    console.error('nowpayments invoice failed', r.status, body?.message);
+    return send(res, 502, { error: 'could_not_create_invoice' });
+  }
+
+  // The customer is redirected here to pick a coin and pay.
+  return send(res, 200, { url: body.invoice_url, id: body.id });
+}
+
+/**
+ * NowPayments signs IPN callbacks with HMAC-SHA512 over the JSON body with
+ * its keys sorted. Without checking it anyone could POST a "finished" payment.
+ */
+function ipnSignatureValid(raw, header) {
+  const secret = process.env.NOWPAYMENTS_IPN_SECRET;
+  if (!secret || !header) return false;
+
+  const sortedStringify = (v) => {
+    if (Array.isArray(v)) return '[' + v.map(sortedStringify).join(',') + ']';
+    if (v && typeof v === 'object') {
+      return '{' + Object.keys(v).sort()
+        .map((k) => JSON.stringify(k) + ':' + sortedStringify(v[k])).join(',') + '}';
+    }
+    return JSON.stringify(v === undefined ? null : v);
+  };
+
+  let parsed;
+  try { parsed = JSON.parse(raw); } catch { return false; }
+
+  const expected = createHmac('sha512', secret).update(sortedStringify(parsed)).digest('hex');
+  const a = Buffer.from(expected, 'utf8');
+  const b = Buffer.from(String(header).trim(), 'utf8');
+  // Length check first — timingSafeEqual throws on a mismatch.
+  return a.length === b.length && timingSafeEqual(a, b);
+}
+
 /* -------------------------------------------------------------------- entry */
 
 const server = createServer(async (req, res) => {
@@ -161,10 +227,34 @@ const server = createServer(async (req, res) => {
   cors(req, res);
 
   if (req.method === 'OPTIONS') { res.writeHead(204); return res.end(); }
-  if (path === '/health') return send(res, 200, { ok: true, env: BASE });
+  if (path === '/health') {
+    // The page reads `providers` to decide which payment tabs to offer.
+    return send(res, 200, {
+      ok: true,
+      env: BASE,
+      providers: { card: true, crypto: NOWPAY_ENABLED },
+    });
+  }
 
   try {
     if (path === '/api/pok/order' && req.method === 'POST') return await createOrder(res);
+
+    if (path === '/api/nowpayments/invoice' && req.method === 'POST') return await createInvoice(res);
+
+    if (path === '/api/nowpayments/ipn' && req.method === 'POST') {
+      let raw = '';
+      for await (const chunk of req) raw += chunk;
+      if (!ipnSignatureValid(raw, req.headers['x-nowpayments-sig'])) {
+        console.warn('nowpayments ipn rejected: bad signature');
+        return send(res, 401, { error: 'bad_signature' });
+      }
+      const b = (() => { try { return JSON.parse(raw); } catch { return null; } })();
+      console.log('nowpayments ipn', JSON.stringify({
+        orderId: b?.order_id, status: b?.payment_status, id: b?.payment_id,
+      }));
+      // Only `finished` means settled. Fulfilment hooks in here.
+      res.writeHead(200); return res.end('ok');
+    }
 
     const m = path.match(/^\/api\/pok\/order\/([^/]+)$/);
     if (m && req.method === 'GET') return await readOrder(res, m[1]);

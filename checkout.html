@@ -110,7 +110,8 @@ h2{
   <h2>Payment method</h2>
   <div class="methods" role="tablist">
     <button class="method" role="tab" aria-selected="true"  data-panel="paypal">PayPal</button>
-    <button class="method" role="tab" aria-selected="false" data-panel="pok">Card &middot; Pok</button>
+    <button class="method" role="tab" aria-selected="false" data-panel="pok">Card</button>
+    <button class="method" role="tab" aria-selected="false" data-panel="crypto">Crypto</button>
   </div>
 
   <section class="panel on" id="panel-paypal">
@@ -126,7 +127,14 @@ h2{
     <p class="note" id="pok-note" hidden></p>
   </section>
 
-  <p class="secure">Payments handled by PayPal and Pok &middot; cards never touch this server</p>
+  <section class="panel" id="panel-crypto">
+    <button class="pay-btn" id="crypto-start">Pay with crypto</button>
+    <p class="hint">BTC, ETH, USDT and 100+ others. You'll finish on NowPayments'
+      secure page, then return here.</p>
+    <p class="note" id="crypto-note" hidden></p>
+  </section>
+
+  <p class="secure">Payments handled by PayPal, Pok &amp; NowPayments &middot; card details never touch this server</p>
 
 </div>
 
@@ -167,25 +175,62 @@ h2{
     });
   });
 
-  function unavailable() {
+  var cryptoStart = document.getElementById('crypto-start');
+  var cryptoNote  = document.getElementById('crypto-note');
+
+  function sayCrypto(msg, kind) {
+    cryptoNote.textContent = msg;
+    cryptoNote.className = 'note' + (kind ? ' ' + kind : '');
+    cryptoNote.hidden = false;
+  }
+
+  function cardOff() {
     start.disabled = true;
     say('Card payment is unavailable right now. Use PayPal above.');
   }
+  function cryptoOff() {
+    cryptoStart.disabled = true;
+    sayCrypto('Crypto payment is unavailable right now. Use PayPal above.');
+  }
 
-  if (typeof PokPayment === 'undefined') { unavailable(); return; }
+  var sdkReady = typeof PokPayment !== 'undefined';
 
-  /* Only offer the card button once the order service actually answers.
-     Without this it looks live whenever the SDK loads, and only fails after
-     someone has already committed to paying by card. PayPal is unaffected. */
+  /* Both non-PayPal methods stay disabled until the payment service answers
+     and says it has that provider configured. Without this they look live and
+     only fail once someone has committed to paying that way. PayPal is a
+     plain link and never depends on any of this. */
   start.disabled = true;
+  cryptoStart.disabled = true;
+
   fetch(POK_API + '/health', { cache: 'no-store' })
     .then(function (r) { if (!r.ok) throw 0; return r.json(); })
     .then(function (h) {
       if (!h || h.ok !== true) throw 0;
-      start.disabled = false;
-      note.hidden = true;
+      var p = h.providers || {};
+      if (sdkReady && p.card !== false) { start.disabled = false; note.hidden = true; }
+      else cardOff();
+      if (p.crypto) { cryptoStart.disabled = false; cryptoNote.hidden = true; }
+      else cryptoOff();
     })
-    .catch(unavailable);
+    .catch(function () { cardOff(); cryptoOff(); });
+
+  cryptoStart.addEventListener('click', async function () {
+    cryptoStart.disabled = true;
+    sayCrypto('Creating your invoice…');
+    try {
+      // Amount is decided by the server, never sent from here.
+      var r = await fetch(POK_API + '/api/nowpayments/invoice', { method: 'POST' });
+      if (!r.ok) throw new Error('invoice');
+      var url = (await r.json()).url;
+      if (!url) throw new Error('invoice');
+      window.location.href = url;
+    } catch (e) {
+      sayCrypto('Could not start the crypto payment. Please use PayPal above.', 'err');
+      cryptoStart.disabled = false;
+    }
+  });
+
+  if (!sdkReady) cardOff();
 
   start.addEventListener('click', async function () {
     start.disabled = true;

@@ -1,18 +1,31 @@
-# Pok card payments
+# Payments service
 
-Adds card payment next to PayPal, with the card form on our own page instead of
-a redirect — the checkout shape Anduel asked for.
+Backs the three payment methods on `checkout.html`:
 
-Pok's API keys can never sit in browser code, so a small Cloudflare Worker
-creates the order and the page only ever receives an order id.
+| Method | Provider | How it runs |
+|---|---|---|
+| PayPal | PayPal | plain link, no server involved |
+| Card | Pok | card form rendered on our own page |
+| Crypto | NowPayments | redirect to a hosted invoice |
+
+PayPal needs nothing. The other two need API keys that can never sit in browser
+code, so a small service creates the order or invoice server-side and the page
+only ever receives an id or a URL.
 
 ```
-checkout.html  ──POST /api/pok/order──▶  Worker  ──▶  api.pokpay.io
-      │                                    │
-      │◀────────── { orderId } ────────────┘
-      │
-      └── PokPayment.renderForm(orderId)  ──▶  card form, on our page
+checkout.html ──POST /api/pok/order─────────▶ service ──▶ api.pokpay.io
+      │◀──────────── { orderId } ─────────────┘
+      └── PokPayment.renderForm(orderId) ──▶ card form, on our page
+
+checkout.html ──POST /api/nowpayments/invoice ▶ service ──▶ api.nowpayments.io
+      │◀──────────── { url } ─────────────────┘
+      └── redirect ──▶ hosted invoice, pick a coin
 ```
+
+The folder is still named `pok/` for continuity; it serves all providers.
+
+Prices are set server-side in both paths, never sent from the browser —
+otherwise anyone could open devtools and buy the package for a euro.
 
 ## Why the old link failed
 
@@ -84,11 +97,20 @@ In the Coolify dashboard, on the same server as the site:
 
    | Key | Value |
    |---|---|
-   | `POK_KEY_ID` | from the dashboard |
-   | `POK_KEY_SECRET` | from the dashboard — mark it **secret** |
-   | `POK_MERCHANT_ID` | from the dashboard |
+   | `POK_KEY_ID` | Pok dashboard |
+   | `POK_KEY_SECRET` | Pok dashboard — mark it **secret** |
+   | `POK_MERCHANT_ID` | Pok dashboard |
    | `POK_ENV` | `production` |
-   | `ALLOWED_ORIGINS` | the site's origin, e.g. `https://goldea.ai` |
+   | `ALLOWED_ORIGINS` | the site's origin, e.g. `https://anduelgega.com` |
+   | `NOWPAYMENTS_API_KEY` | NowPayments → Payments API — mark it **secret** |
+   | `NOWPAYMENTS_IPN_SECRET` | NowPayments → Payments API — mark it **secret** |
+   | `NOWPAYMENTS_IPN_URL` | `https://<service-domain>/api/nowpayments/ipn` |
+   | `NOWPAYMENTS_SUCCESS_URL` | `https://anduelgega.com/checkout.html?paid=1` |
+
+   Crypto switches itself on only when `NOWPAYMENTS_API_KEY` is present —
+   `/health` reports `providers.crypto`, and the page hides the tab's button
+   until it is true. So the card path can go live before crypto, or the
+   reverse, with no code change.
 
 4. Port **3000**. Health check path **`/health`**.
 5. Give it a domain — either a subdomain (`pok.<site>`) or a path route on the
@@ -192,11 +214,31 @@ links straight back at:
 https://www.paypal.com/ncp/payment/J4CL6SY9AAH9Y
 ```
 
+## NowPayments notes
+
+Its unit is unambiguous, unlike Pok's: the API echoes back `price_amount: "1"`
+with `price_currency: "EUR"`, i.e. plain euros. `PRICE_EUR` is used directly.
+
+IPN callbacks are signed with HMAC-SHA512 over the JSON body **with its keys
+sorted**, in the `x-nowpayments-sig` header. `/api/nowpayments/ipn` verifies
+that and returns `401` otherwise — without it anyone could POST a `finished`
+payment and claim a licence. Verified against genuine, forged, tampered, and
+unsigned bodies.
+
+Set the IPN URL in the NowPayments dashboard (Payments API → *Add your IPN
+URL*) to `https://<service-domain>/api/nowpayments/ipn`.
+
+Only `payment_status: "finished"` means settled — `partially_paid` and
+`confirming` do not.
+
 ## Troubleshooting
 
 | Symptom | Cause |
 |---|---|
-| `401` from login | Staging keys on the production host, or the reverse |
+| `401` from Pok login | Staging keys on the production host, or the reverse |
 | `403` on create order | `merchantId` doesn't belong to that key pair |
 | Browser CORS error | Site origin missing from `ALLOWED_ORIGINS` |
-| `could_not_create_order` | Check `wrangler tail` — the real reason is logged server-side |
+| Card tab stays disabled | `/health` unreachable, or `providers.card` false |
+| Crypto tab stays disabled | `NOWPAYMENTS_API_KEY` not set on the container |
+| `bad_signature` on IPN | `NOWPAYMENTS_IPN_SECRET` doesn't match the dashboard |
+| `could_not_create_order` | Check container logs — the real reason is logged server-side |
