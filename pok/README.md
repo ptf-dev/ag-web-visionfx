@@ -96,9 +96,8 @@ other sites creating orders against the merchant account.
 
 - [ ] **Confirm the amount unit. Still unresolved — do this first.** Pok's docs
       show `"amount": 100` with `"currencyCode": "EUR"` and never say whether
-      that means 100 euros or 100 cents. Create one order, read it back with
-      `GET /sdk-orders/{id}`, and check what comes back. If it is minor units,
-      `PRODUCT.amount` in `worker.js` must become `35000`.
+      that means 100 euros or 100 cents. Run `./check-amount.sh` (below) and
+      set `AMOUNT_IN_MINOR_UNITS` in `worker.js` from what the dashboard shows.
       **Getting this wrong charges €3.50 or €35,000 instead of €350.**
 - [ ] Run a full payment with a [test card](https://docs.pokpay.io/docs/pok-js#test-cards)
       (staging only — test cards do not work against production).
@@ -116,20 +115,20 @@ and read it straight back. An SDK order that nobody pays moves no money and
 simply expires.
 
 ```sh
-TOKEN=$(curl -s -X POST https://api.pokpay.io/auth/sdk/login \
-  -H 'Content-Type: application/json' \
-  -d '{"keyId":"<KEY_ID>","keySecret":"<KEY_SECRET>"}' | jq -r .data.accessToken)
-
-curl -s -X POST https://api.pokpay.io/merchants/<MERCHANT_ID>/sdk-orders \
-  -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
-  -d '{"amount":1,"currencyCode":"EUR","autoCapture":true,"shippingCost":0}' | jq .
+cd pok
+POK_KEY_ID=... POK_KEY_SECRET=... POK_MERCHANT_ID=... ./check-amount.sh
 ```
 
-Then open that order in the POK Business dashboard under *Pagesat online*. If it
-shows as **€1.00** the API takes major units and `PRODUCT.amount` stays `350`.
-If it shows as **€0.01** it takes minor units and `PRODUCT.amount` must be
-`35000`. Do not skip this because the numbers look obvious — the whole point is
-that the docs do not say.
+Then open that order in the POK Business dashboard under *Pagesat online* and
+set one flag at the top of `worker.js` from what it shows:
+
+| Dashboard shows | `AMOUNT_IN_MINOR_UNITS` | Order sent as |
+|---|---|---|
+| **€1.00** | `false` (current default) | `350` |
+| **€0.01** | `true` | `35000` |
+
+Do not skip this because the numbers look obvious — the whole point is that the
+docs do not say, and the default is a guess until someone checks.
 
 ## Note on the buy buttons
 

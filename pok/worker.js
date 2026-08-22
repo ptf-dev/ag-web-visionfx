@@ -20,15 +20,25 @@
  * The price is fixed here, on the server, on purpose. If the browser were
  * allowed to send an amount, anyone could open devtools and buy the package
  * for one euro.
- *
- * !! VERIFY THE UNIT ON STAGING BEFORE GOING LIVE !!
- * Pok's docs show `"amount": 100` with `"currencyCode": "EUR"` but never say
- * whether that is 100 euros or 100 cents. Create one staging order and read
- * the amount back before pointing real customers at this. Getting it wrong
- * means charging EUR 3.50 or EUR 35,000 instead of EUR 350.
  */
+const PRICE_EUR = 350;
+
+/**
+ * !! UNCONFIRMED — SET THIS BEFORE GOING LIVE !!
+ *
+ * Pok's docs show `"amount": 100` with `"currencyCode": "EUR"` but never say
+ * whether that is 100 euros or 100 cents. Run `pok/check-amount.sh`, look at
+ * the resulting order in the dashboard, and set this accordingly:
+ *
+ *   dashboard shows EUR 1.00  → false (the API takes euros)
+ *   dashboard shows EUR 0.01  → true  (the API takes cents)
+ *
+ * Wrong either way means charging EUR 3.50 or EUR 35,000 instead of EUR 350.
+ */
+const AMOUNT_IN_MINOR_UNITS = false;
+
 const PRODUCT = {
-  amount: 350,
+  amount: AMOUNT_IN_MINOR_UNITS ? PRICE_EUR * 100 : PRICE_EUR,
   currencyCode: 'EUR',
   label: 'Paketa Premium + Gold EA Vision — Lifetime',
 };
