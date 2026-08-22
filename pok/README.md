@@ -51,8 +51,17 @@ Open that menu → **API Keys** → create a key. Copy all three values:
 
 Staging and production credentials are **not** interchangeable — staging keys
 only work against `api-staging.pokpay.io`, production keys only against
-`api.pokpay.io`. Create staging keys first; the checklist below runs entirely
-on staging.
+`api.pokpay.io`.
+
+> **The keys the dashboard hands you are production keys.** Checked against
+> both hosts: `api.pokpay.io/auth/sdk/login` returns `200` with a token
+> (`expiresIn` 28800000, i.e. 8 hours), while `api-staging.pokpay.io` rejects
+> the same pair with `400 — "Your credentials are incorrect"`.
+>
+> There is no staging toggle in the API Keys screen, so **staging credentials
+> have to be requested from POK support**. Ask for them before the checklist
+> below — it is the only way to test a real card payment without moving real
+> money. If POK will not issue them, see *Testing without staging keys*.
 
 Nothing from this step goes in the repo. The three values are set as Worker
 secrets in step 2.
@@ -85,18 +94,42 @@ other sites creating orders against the merchant account.
 
 ## Before going live
 
-- [ ] **Confirm the amount unit.** Pok's docs show `"amount": 100` with
-      `"currencyCode": "EUR"` and never say whether that means 100 euros or
-      100 cents. Create one staging order, read it back with
-      `GET /sdk-orders/{id}`, and check. If it is minor units, `PRODUCT.amount`
-      in `worker.js` must become `35000`. **Getting this wrong charges €3.50 or
-      €35,000 instead of €350.**
-- [ ] Run a full staging payment with a [test card](https://docs.pokpay.io/docs/pok-js#test-cards).
+- [ ] **Confirm the amount unit. Still unresolved — do this first.** Pok's docs
+      show `"amount": 100` with `"currencyCode": "EUR"` and never say whether
+      that means 100 euros or 100 cents. Create one order, read it back with
+      `GET /sdk-orders/{id}`, and check what comes back. If it is minor units,
+      `PRODUCT.amount` in `worker.js` must become `35000`.
+      **Getting this wrong charges €3.50 or €35,000 instead of €350.**
+- [ ] Run a full payment with a [test card](https://docs.pokpay.io/docs/pok-js#test-cards)
+      (staging only — test cards do not work against production).
 - [ ] Set `POK_WEBHOOK_URL` and `POK_REDIRECT_URL` in `wrangler.toml`.
 - [ ] Decide fulfilment — `handleWebhook` in `worker.js` currently only logs.
       Licence key and EA file delivery hooks in there.
 - [ ] Swap `POK_ENV` to `production` and put production keys in.
 - [ ] Only then point the site's buy buttons at `checkout.html`.
+
+### Testing without staging keys
+
+If POK will not issue staging credentials, the amount unit can still be settled
+on production without risking a real charge: create **one order for `amount: 1`**
+and read it straight back. An SDK order that nobody pays moves no money and
+simply expires.
+
+```sh
+TOKEN=$(curl -s -X POST https://api.pokpay.io/auth/sdk/login \
+  -H 'Content-Type: application/json' \
+  -d '{"keyId":"<KEY_ID>","keySecret":"<KEY_SECRET>"}' | jq -r .data.accessToken)
+
+curl -s -X POST https://api.pokpay.io/merchants/<MERCHANT_ID>/sdk-orders \
+  -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+  -d '{"amount":1,"currencyCode":"EUR","autoCapture":true,"shippingCost":0}' | jq .
+```
+
+Then open that order in the POK Business dashboard under *Pagesat online*. If it
+shows as **€1.00** the API takes major units and `PRODUCT.amount` stays `350`.
+If it shows as **€0.01** it takes minor units and `PRODUCT.amount` must be
+`35000`. Do not skip this because the numbers look obvious — the whole point is
+that the docs do not say.
 
 ## Note on the buy buttons
 

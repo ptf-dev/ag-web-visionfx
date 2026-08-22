@@ -67,8 +67,9 @@ function json(body, status, env, request) {
 
 /* ------------------------------------------------------------------ auth */
 
-// Tokens last ~10 minutes. Reuse one across requests while the isolate is warm
-// rather than logging in on every checkout.
+// Reuse a token across requests while the isolate is warm rather than logging
+// in on every checkout. Lifetime comes from the login response — production
+// returned expiresIn 28800000 (8 hours) when this was checked.
 let cachedToken = null;
 
 async function getAccessToken(env, base) {
