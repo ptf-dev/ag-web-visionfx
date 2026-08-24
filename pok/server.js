@@ -159,6 +159,55 @@ async function readOrder(res, orderId) {
   });
 }
 
+/**
+ * Finish an order the client SDK did not finish itself.
+ *
+ * The CDN docs say renderForm "captures the payment on success", but the REST
+ * docs say the server completes the order with guest-confirm, confirm or
+ * capture "depending on your integration". Those disagree, and the gap is
+ * money: a customer whose card was authorised but never captured has paid
+ * nothing while believing they have.
+ *
+ * So this is only called when a read-back shows the order still uncaptured.
+ * It tries the guest path first, since renderForm drives guest checkout, then
+ * falls back to an explicit capture, and finally re-reads the order and
+ * reports what it actually says rather than trusting either call.
+ */
+async function completeOrder(res, orderId) {
+  if (!/^[A-Za-z0-9-]{1,64}$/.test(orderId)) return send(res, 400, { error: 'bad_order_id' });
+
+  const token = await getAccessToken();
+  const auth = { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` };
+
+  for (const url of [
+    `${BASE}/sdk-orders/${orderId}/guest-confirm`,
+    `${BASE}/merchants/${process.env.POK_MERCHANT_ID}/sdk-orders/${orderId}/capture`,
+  ]) {
+    try {
+      const r = await fetch(url, { method: 'POST', headers: auth, body: '{}' });
+      if (r.ok) break;
+      console.warn('pok complete attempt failed', r.status, url.split('/').pop());
+    } catch (err) {
+      console.warn('pok complete attempt errored', err?.message);
+    }
+  }
+
+  // The order itself is the only trustworthy answer.
+  const check = await fetch(`${BASE}/sdk-orders/${orderId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const body = await check.json().catch(() => null);
+  if (!check.ok) return send(res, 502, { error: 'could_not_verify' });
+
+  const o = body?.data?.sdkOrder || body?.data || {};
+  return send(res, 200, {
+    id: o.id,
+    status: o.status,
+    amount: o.amount,
+    capturedAmount: o.capturedAmount,
+  });
+}
+
 /* ----------------------------------------------------------- nowpayments */
 
 async function createInvoice(res) {
@@ -258,6 +307,9 @@ const server = createServer(async (req, res) => {
 
     const m = path.match(/^\/api\/pok\/order\/([^/]+)$/);
     if (m && req.method === 'GET') return await readOrder(res, m[1]);
+
+    const done = path.match(/^\/api\/pok\/order\/([^/]+)\/complete$/);
+    if (done && req.method === 'POST') return await completeOrder(res, done[1]);
 
     if (path === '/api/pok/webhook' && req.method === 'POST') {
       // Anyone can POST here, so treat the body as a hint, never as proof of

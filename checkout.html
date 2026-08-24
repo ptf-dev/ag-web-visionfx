@@ -321,13 +321,22 @@ h2{
         'pok-form',
         orderId,
         async function onSuccess() {
-          // Don't trust the callback alone — ask the Worker what the order
+          // Don't trust the callback alone — ask the server what the order
           // actually says before telling anyone they've paid.
+          function isPaid(o) {
+            return o && (o.capturedAmount > 0 || /paid|captur|success|complete/i.test(o.status || ''));
+          }
           try {
-            var check = await fetch(POK_API + "/api/pok/order/" + orderId);
-            var order = await check.json();
-            var paid = order && (order.capturedAmount > 0 || /paid|captur|success|complete/i.test(order.status || ''));
-            if (!paid) throw new Error('unconfirmed');
+            var order = await (await fetch(POK_API + '/api/pok/order/' + orderId)).json();
+            if (!isPaid(order)) {
+              /* Pok's docs disagree about whether the SDK captures or the
+                 server must finish the order. If it looks unfinished, ask the
+                 server to complete it rather than leaving a customer who
+                 believes they paid with an uncaptured authorisation. */
+              order = await (await fetch(POK_API + '/api/pok/order/' + orderId + '/complete',
+                                         { method: 'POST' })).json();
+            }
+            if (!isPaid(order)) throw new Error('unconfirmed');
           } catch (e) {
             say('Payment sent, but we could not confirm it yet. Please contact us before paying again.', 'err');
             return;
