@@ -277,11 +277,18 @@ const server = createServer(async (req, res) => {
 
   if (req.method === 'OPTIONS') { res.writeHead(204); return res.end(); }
   if (path === '/health') {
-    // The page reads `providers` to decide which payment tabs to offer.
+    /* The page reads `providers` to decide which payment methods to offer, so
+       this has to reflect what is actually configured. Reporting card:true
+       purely because the service is running would light up the button on a
+       container deployed without Pok credentials, and the failure would only
+       surface once a customer had committed to paying by card. */
+    const cardReady = Boolean(
+      process.env.POK_KEY_ID && process.env.POK_KEY_SECRET && process.env.POK_MERCHANT_ID
+    );
     return send(res, 200, {
       ok: true,
       env: BASE,
-      providers: { card: true, crypto: NOWPAY_ENABLED },
+      providers: { card: cardReady, crypto: NOWPAY_ENABLED },
     });
   }
 
