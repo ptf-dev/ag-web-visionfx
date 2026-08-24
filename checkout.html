@@ -134,6 +134,7 @@ h2{
   </section>
 
   <section class="panel" id="panel-crypto">
+    <a class="pay-btn" id="crypto-link" href="#" target="_blank" rel="noopener" hidden>Pay with crypto</a>
     <button class="pay-btn" id="crypto-start">Pay with crypto</button>
     <p class="hint">BTC, ETH, USDT and 100+ others. You'll finish on NowPayments'
       secure page, then return here.</p>
@@ -177,6 +178,21 @@ h2{
   ---------------------------------------------------------------- */
   var POK_PAY_LINK = '';
 
+  /* ----------------------------------------------------------------
+     Crypto, working today without the payments service.
+
+     A NowPayments invoice URL stays open — unlike a Pok order, which is
+     consumed on first use — so one invoice can serve as a standing link.
+     collect_user_data is on for this invoice, so each buyer enters their
+     details on NowPayments and you can tell payments apart; without that
+     everyone would land on the same order_id with nothing to match them by.
+
+     Trade-off: no IPN reaches us without the service, so payments show up
+     in the NowPayments dashboard rather than triggering fulfilment here.
+     Clear this once the container is deployed and the API path takes over.
+  ---------------------------------------------------------------- */
+  var CRYPTO_PAY_LINK = 'https://nowpayments.io/payment/?iid=5977459806';
+
   var tabs  = document.querySelectorAll('.method');
   var note  = document.getElementById('pok-note');
   var start = document.getElementById('pok-start');
@@ -219,6 +235,7 @@ h2{
      Card tab becomes a plain link like PayPal and skips the probe entirely.
      Crypto still depends on the service either way. */
   var cardViaLink = Boolean(POK_PAY_LINK);
+  var cryptoViaLink = Boolean(CRYPTO_PAY_LINK);
 
   if (cardViaLink) {
     var link = document.getElementById('pok-link');
@@ -228,6 +245,13 @@ h2{
     start.hidden = true;
   }
 
+  if (cryptoViaLink) {
+    var clink = document.getElementById('crypto-link');
+    clink.href = CRYPTO_PAY_LINK;
+    clink.hidden = false;
+    cryptoStart.hidden = true;
+  }
+
   var sdkReady = typeof PokPayment !== 'undefined';
 
   /* Whatever still depends on the service stays disabled until it answers and
@@ -235,21 +259,29 @@ h2{
      only fails once someone has committed to paying that way. PayPal — and a
      card payment link — are plain links and never depend on any of this. */
   if (!cardViaLink) start.disabled = true;
-  cryptoStart.disabled = true;
+  if (!cryptoViaLink) cryptoStart.disabled = true;
 
-  fetch(POK_API + '/health', { cache: 'no-store' })
-    .then(function (r) { if (!r.ok) throw 0; return r.json(); })
-    .then(function (h) {
-      if (!h || h.ok !== true) throw 0;
-      var p = h.providers || {};
-      if (!cardViaLink) {
-        if (sdkReady && p.card !== false) { start.disabled = false; note.hidden = true; }
-        else cardOff();
-      }
-      if (p.crypto) { cryptoStart.disabled = false; cryptoNote.hidden = true; }
-      else cryptoOff();
-    })
-    .catch(function () { if (!cardViaLink) cardOff(); cryptoOff(); });
+  // Nothing left to probe for if both methods are plain links.
+  if (!cardViaLink || !cryptoViaLink) {
+    fetch(POK_API + '/health', { cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function (h) {
+        if (!h || h.ok !== true) throw 0;
+        var p = h.providers || {};
+        if (!cardViaLink) {
+          if (sdkReady && p.card !== false) { start.disabled = false; note.hidden = true; }
+          else cardOff();
+        }
+        if (!cryptoViaLink) {
+          if (p.crypto) { cryptoStart.disabled = false; cryptoNote.hidden = true; }
+          else cryptoOff();
+        }
+      })
+      .catch(function () {
+        if (!cardViaLink) cardOff();
+        if (!cryptoViaLink) cryptoOff();
+      });
+  }
 
   cryptoStart.addEventListener('click', async function () {
     cryptoStart.disabled = true;
