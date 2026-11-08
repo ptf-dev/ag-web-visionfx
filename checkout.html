@@ -153,6 +153,7 @@ h1 span{color:var(--gold)}
     </section>
 
     <div class="alt">
+      <a href="faleminderit.html" style="color:#E8C76A"><span>Pagova tashmë? Merr aksesin këtu</span><span>&rarr;</span></a>
       <a href="docs/bli-robotin-me-bank.html"><span>Bli me transfertë bankare (udhëzues)</span><span>&rarr;</span></a>
       <a href="https://api.whatsapp.com/send/?phone=%2B355684446528&amp;type=phone_number&amp;app_absent=0" target="_blank" rel="noopener"><span>Pyet para blerjes në WhatsApp</span><span>&rarr;</span></a>
     </div>
@@ -359,6 +360,8 @@ h1 span{color:var(--gold)}
           }
           mount.innerHTML = '';
           say('Payment received. Check your email for the licence key and EA file.', 'ok');
+          // Confirmed by the server above — hand the customer to the thank-you page.
+          setTimeout(function () { window.location.href = 'faleminderit.html'; }, 1200);
         },
         function onError() {
           say('That payment did not go through. Try again, or use PayPal.', 'err');
