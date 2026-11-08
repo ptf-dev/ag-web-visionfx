@@ -63,6 +63,27 @@
   .mmenu:not([hidden]){display:flex;flex-direction:column;gap:10px;padding:12px 16px 18px;border-top:1px solid rgba(255,255,255,.08)}
   .mmenu .np{height:48px;justify-content:center;font-size:15px}
 }
+
+/* story */
+.steps{list-style:none;margin:56px 0 0;padding:0;display:grid;gap:28px;position:relative}
+.steps::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:linear-gradient(180deg,rgba(232,194,98,0),rgba(232,194,98,.5) 10%,rgba(232,194,98,.5) 90%,rgba(232,194,98,0))}
+.step{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;position:relative}
+.step::after{content:"";position:absolute;left:50%;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:radial-gradient(circle at 30% 25%,#FFF1C4,#C9A24A 55%,#8A6420);box-shadow:0 0 0 6px rgba(232,194,98,.15),0 0 24px rgba(232,194,98,.6)}
+.step.flip .s-pic{order:2}.step.flip .s-txt{order:1;text-align:right}
+.s-pic{border-radius:32px;overflow:hidden;aspect-ratio:4/3;border:1px solid rgba(255,255,255,.12);box-shadow:0 40px 80px -36px rgba(0,0,0,1);background:#0f1320}
+.s-pic img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.step:hover .s-pic img{transform:scale(1.04)}
+.s-year{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#E8C76A;padding:7px 12px;border-radius:999px;border:1px solid rgba(232,194,98,.45);background:rgba(232,194,98,.08)}
+.s-txt h3{margin:14px 0 10px;font-size:30px;line-height:1.08;letter-spacing:-.025em;font-weight:900}
+.s-txt p{margin:0;font-size:17px;line-height:1.6}
+.nums{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:64px}
+.nums div{padding:24px;border-radius:26px;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.nums b{display:block;font-size:40px;font-weight:900;letter-spacing:-.03em;line-height:1}
+.nums span{display:block;margin-top:6px;font-size:13px;color:rgba(255,255,255,.62);letter-spacing:.08em;text-transform:uppercase}
+.proofs{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:start}
+.proofs img{width:100%;border-radius:20px;border:1px solid rgba(255,255,255,.12);display:block;box-shadow:0 30px 60px -36px rgba(0,0,0,1)}
+.proofs .chats{display:grid;gap:14px}
+@media (max-width:900px){.steps::before{left:22px}.step{grid-template-columns:1fr;gap:16px;padding-left:52px}.step::after{left:22px;top:12px}.step.flip .s-pic{order:1}.step.flip .s-txt{order:2;text-align:left}.s-txt h3{font-size:24px}.nums{grid-template-columns:1fr 1fr}.proofs{grid-template-columns:1fr 1fr}#rreth h2{font-size:34px!important}#rreth{padding:70px 0 70px!important}}
 /* banner hero */
 .banner{position:relative;width:100%;max-width:1600px;margin:0 auto;height:clamp(480px,42vw,760px);display:flex;align-items:flex-end;overflow:hidden;border-radius:0 0 40px 40px;border-bottom:1px solid rgba(232,194,98,.35);box-shadow:0 40px 80px -40px rgba(0,0,0,1)}
 .banner img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%}
@@ -394,13 +415,42 @@ a{color:#fff;text-decoration:none}a:hover{color:#fff}
   </section>
 
   <!-- KUSH JAM -->
-  <section id="rreth" class="wrap" style="padding: 100px 32px; display: grid; grid-template-columns: .9fr 1.1fr; gap: 56px; align-items: center">
-    <div style="border-radius: 36px; overflow: hidden; aspect-ratio: 4 / 5; border: 1px solid rgba(255,255,255,.12)"><img src="images/anduel-about.jpg" alt="Anduel Gega" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
-    <div style="display: flex; flex-direction: column; gap: 18px">
-      <span style="font-size: 13px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: #E8C76A">Kush jam</span>
-      <h2 style="margin: 0; font-size: 42px; line-height: 1.05; letter-spacing: -.03em; font-weight: 900">Kam filluar trading në 2014. Sot ndërtoj kompanitë që më mungonin atëherë.</h2>
-      <p class="muted" style="margin: 0; font-size: 17px">PropFirmsTech ndihmon sipërmarrësit të hapin prop firmën e tyre, me 30+ klientë. PropFirmsRanking rendit prop firmat pa hile. GoldEA.ai është roboti im për floririn. Dhe Vision FX është komuniteti ku kam mbledhur 5000+ njerëz që duan të mësojnë trading në shqip.</p>
-      <p class="muted" style="margin: 0; font-size: 17px">S'të premtoj pasuri për një natë. Të tregoj çfarë funksionon dhe ku e humbin shumica.</p>
+  <section id="rreth" style="padding: 110px 0 100px; border-top: 1px solid rgba(255,255,255,.06)">
+    <div class="wrap">
+      <div style="max-width: 760px">
+        <span style="font-size: 13px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: #E8C76A">Kush jam · Rrugëtimi im</span>
+        <h2 style="margin: 12px 0 18px; font-size: 48px; line-height: 1.02; letter-spacing: -.03em; font-weight: 900">E nisa si çdo fillestar. Me shpresën për më shumë nga sa kisha.</h2>
+        <p class="muted" style="margin: 0; font-size: 19px; line-height: 1.6">Isha 18 vjeç, në universitet, kur dëgjova për herë të parë fjalën "forex". S'kisha para, s'kisha mentor, s'kisha asnjë garanci. Kisha vetëm bindjen që duhej të ekzistonte një rrugë më e mirë nga ajo që më ofronte realiteti. Nga autobusi me 5 mijë lekë në xhep, te avioni privat. Kjo është historia e asaj rruge.</p>
+      </div>
+
+      <ol class="steps">
+        <li class="step"><div class="s-pic"><img src="images/story-bus.jpg" alt="Anduel Gega në autobus, 18 vjeç" loading="lazy"></div><div class="s-txt"><span class="s-year">2014</span><h3>Fjala e parë: forex</h3><p class="muted">Student, 18 vjeç, në autobus me kufje në vesh dhe 5 mijë lekë në xhep. Një fjalë që s'e kuptoja, por që s'më dilte nga mendja. Fillova të lexoja natën, pas leksioneve. Humba, mësova, humba prapë. Si gjithë të tjerët.</p></div></li>
+        <li class="step flip"><div class="s-pic"><img src="images/story-shirt.jpg" alt="Anduel Gega me bluzën e parë Vision FX" loading="lazy" style="object-position:50% 20%"></div><div class="s-txt"><span class="s-year">2015</span><h3>Një vit e gjysmë kokëfortësi</h3><p class="muted">Gati 18 muaj çdo ditë mbi grafikë, derisa arrita të nxirrja në muaj aq sa merrte pedagogu im si rrogë. Atë ditë e kuptova: kjo nuk është fat, është mjeshtëri. Dhe mjeshtëria mësohet.</p></div></li>
+        <li class="step"><div class="s-pic"><img src="images/story-seminar-1.jpg" alt="Seminaret e para të Anduel Gegës" loading="lazy"></div><div class="s-txt"><span class="s-year">Viti i dytë</span><h3>Lashë universitetin</h3><p class="muted">Vendimi më i vështirë dhe më i drejtë që kam marrë. Jo se shkolla ishte e keqe — por unë e kisha gjetur punën e jetës. Familja s'e kuptoi menjëherë. Pak muaj më vonë mbaja seminaret e para, në salla të vogla hotelesh, para njerëzve që kishin të njëjtën uri që kisha unë.</p></div></li>
+        <li class="step flip"><div class="s-pic"><img src="images/story-seminar-2.jpg" alt="Anduel Gega duke shpjeguar strategjinë para grafikut" loading="lazy"></div><div class="s-txt"><span class="s-year">Strategjia</span><h3>Nga humbjet lindi sistemi im</h3><p class="muted">Vite me sfida, llogari të djegura, mësime të shtrenjta. Deri ditën që formulova strategjinë time — rregulla të qarta, pa emocione. Pikërisht atë strategji e ndaj këtu <a href="https://visionfx.cc" target="_blank" rel="noopener" style="color:#8FB3FF;font-weight:700">falas, me video, deri në detajin e fundit</a>. Se dikush duhej ta kishte bërë këtë për mua në 2014.</p></div></li>
+        <li class="step"><div class="s-pic"><img src="images/story-dubai.jpg" alt="Anduel Gega në Dubai" loading="lazy"></div><div class="s-txt"><span class="s-year">2016 → sot</span><h3>Vision FX — komuniteti i parë shqiptar për forex</h3><p class="muted">E krijova që shqiptarët të mos mësonin vetëm, siç mësova unë. Sot Vision FX hyn në vitin e 11-të dhe numëron mijëra anëtarë nga Shqipëria, Kosova dhe diaspora. Komuniteti i parë dhe ende më i madhi.</p></div></li>
+        <li class="step flip"><div class="s-pic"><img src="images/story-jet.jpg" alt="Anduel Gega para avionit privat" loading="lazy"></div><div class="s-txt"><span class="s-year">2024 → 2026</span><h3>Gold EA — robotët që më zëvendësuan lodhjen</h3><p class="muted">Dy vitet e fundit i kalova duke e kthyer përvojën time në sisteme të automatizuara. Robotët Gold EA tregtojnë floririn pa emocione, pa orë të humbura mbi grafikë. Sot i përdorin gati <b style="color:#fff">1.000 persona</b>, që së bashku kanë fituar <b style="color:#E8C76A">mbi 3 milionë euro</b> në prop firma dhe brokera, me llogari reale.</p></div></li>
+      </ol>
+
+      <div class="nums">
+        <div><b>12+</b><span>vite në treg</span></div>
+        <div><b>11</b><span>vite Vision FX</span></div>
+        <div><b>~1.000</b><span>përdorues të Gold EA</span></div>
+        <div><b style="color:#E8C76A">€3M+</b><span>fituar nga anëtarët, llogari reale</span></div>
+      </div>
+
+      <div style="margin-top: 56px">
+        <h3 style="margin: 0 0 6px; font-size: 26px; letter-spacing: -.02em; font-weight: 900">Nga anëtarët, jo nga unë</h3>
+        <p class="muted" style="margin: 0 0 20px; font-size: 15px">Mesazhe dhe rezultate që më dërgojnë çdo ditë. Të pandryshuara.</p>
+        <div class="proofs">
+          <img src="images/proof-1.jpg" alt="Rezultat i një anëtari të Vision FX" loading="lazy">
+          <img src="images/proof-2.jpg" alt="Rezultat i një anëtari të Vision FX" loading="lazy">
+          <img src="images/proof-3.jpg" alt="Rezultat i një anëtari të Vision FX" loading="lazy">
+          <div class="chats"><img src="images/proof-chat-1.jpg" alt="Mesazh falënderimi nga një anëtar" loading="lazy"><img src="images/proof-chat-2.jpg" alt="Mesazh falënderimi nga një anëtar" loading="lazy"></div>
+        </div>
+      </div>
+
+      <p class="muted" style="margin: 48px 0 18px; font-size: 18px; max-width: 760px">S'të premtoj pasuri për një natë. Të tregoj çfarë funksionon, ku e humbin shumica, dhe të jap mjetet që do të doja t'i kisha pasur unë në fillim.</p>
       <div style="display: flex; gap: 10px; flex-wrap: wrap">
         <a href="https://propfirmstech.com" target="_blank" rel="noopener" class="site" style="padding: 10px 16px; border-radius: 999px; border: 1px solid rgba(255,255,255,.16); font-weight: 700; font-size: 14px">PropFirmsTech <span aria-hidden="true" style="opacity:.6">↗</span></a>
         <a href="https://propfirmsranking.com" target="_blank" rel="noopener" class="site" style="padding: 10px 16px; border-radius: 999px; border: 1px solid rgba(255,255,255,.16); font-weight: 700; font-size: 14px">PropFirmsRanking <span aria-hidden="true" style="opacity:.6">↗</span></a>
