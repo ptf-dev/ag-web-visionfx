@@ -45,6 +45,11 @@
   .wafix{right:16px;bottom:16px;height:56px;padding:0 18px 0 8px;font-size:14px}
 }
 [hidden]{display:none!important}
+.card{position:relative;background:radial-gradient(120% 80% at 18% 0%,rgba(255,255,255,.1),rgba(255,255,255,0) 55%),linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.1);box-shadow:0 30px 60px -36px rgba(0,0,0,1),inset 0 1px 0 rgba(255,255,255,.12)}
+.card.gold{background:radial-gradient(120% 80% at 18% 0%,rgba(255,240,190,.22),rgba(255,240,190,0) 55%),linear-gradient(180deg,rgba(232,194,98,.14),rgba(120,88,24,.06));border-color:rgba(232,194,98,.5);box-shadow:0 0 60px -14px rgba(232,194,98,.45),0 30px 60px -36px rgba(0,0,0,1),inset 0 1px 0 rgba(255,236,170,.3)}
+.card.ea{transition:transform .3s,border-color .3s}.card.ea:hover{transform:translateY(-4px);border-color:rgba(232,194,98,.45)}
+@media (max-width:1100px){.pkgs{grid-template-columns:repeat(2,1fr)!important}.eas{grid-template-columns:repeat(3,1fr)!important}}
+@media (max-width:700px){.pkgs{grid-template-columns:1fr!important}.eas{grid-template-columns:1fr!important}#robotet{padding:70px 16px 10px!important}#robotet h2{font-size:32px!important}}
 html{scroll-behavior:smooth}
 .site{transition:transform .25s,border-color .25s,background .25s}
 .site:hover{transform:translateY(-2px);border-color:rgba(232,194,98,.7)!important;background:rgba(232,194,98,.1)}
@@ -130,6 +135,7 @@ a{color:#fff;text-decoration:none}a:hover{color:#fff}
       <nav class="links" style="display: flex; gap: 30px" aria-label="Menu">
         <a href="#goldea" style="color: #F1D98A; font-weight: 800">Gold EA</a>
         <a href="#linket">Kursi falas</a>
+        <a href="#robotet">Robotët</a>
         <a href="#linket">Brokerat</a>
         <a href="#rreth">Kush jam</a>
       </nav>
@@ -169,7 +175,7 @@ a{color:#fff;text-decoration:none}a:hover{color:#fff}
       <a class="bub gold c8 r3" href="#goldea">
         <div class="ic" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1A1407" stroke-width="2.4"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></div>
         <img src="images/gold-ea-6-muaj.jpg" alt="" aria-hidden="true" style="position: absolute; right: 30px; top: 50%; width: 42%; transform: translateY(-50%) perspective(1200px) rotateY(-12deg); transform-origin: right center; border-radius: 18px; border: 1px solid rgba(255,236,170,.55); box-shadow: 0 50px 90px -30px rgba(0,0,0,1), 0 0 50px -10px rgba(232,194,98,.45), inset 0 1px 0 rgba(255,255,255,.4)">
-        <span class="tag">Roboti im për floririn</span>
+        <span class="tag">Robotët e mi për floririn · 6 EA</span>
         <h3 style="font-size: 44px; line-height: 1">Gold EA</h3>
         <p style="max-width: 50%; font-size: 16px">Tregton floririn vetë në MT5, 24/5. Ti e ndjek nga telefoni.</p>
         <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap"><span style="font-size: 40px; font-weight: 900; letter-spacing: -.03em; background: linear-gradient(180deg, #FFF3CC, #E8C76A 60%, #B8862E); -webkit-background-clip: text; background-clip: text; color: transparent">+$111,103</span><span class="muted" style="font-size: 14px">fitim në 6 muaj, llogari reale</span></div>
@@ -244,7 +250,7 @@ a{color:#fff;text-decoration:none}a:hover{color:#fff}
         </div>
         <div style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap">
           <a class="pill pill-g" href="checkout.html">Merre Gold EA · €350</a>
-          <a class="pill pill-o" href="https://api.whatsapp.com/send/?phone=%2B355684446528&amp;type=phone_number&amp;app_absent=0" target="_blank" rel="noopener">Pyet në WhatsApp</a>
+          <a class="pill pill-o" href="#robotet">Shiko të 6 robotët</a>
         </div>
         <div class="muted" style="font-size: 13px">PayPal · Kartë · Kripto · Bankë</div>
       </div>
@@ -261,6 +267,96 @@ a{color:#fff;text-decoration:none}a:hover{color:#fff}
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- ROBOTET -->
+  <section id="robotet" class="wrap" style="padding: 100px 32px 20px">
+    <div style="max-width:720px;margin-bottom:36px">
+      <span style="font-size: 13px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: #E8C76A">Zgjidh robotin tënd</span>
+      <h2 style="margin: 12px 0 10px; font-size: 46px; line-height: 1.02; letter-spacing: -.03em; font-weight: 900">6 robotë për floririn. Një pagesë, i ke përgjithmonë.</h2>
+      <p class="muted" style="margin:0;font-size:17px">Fillon me Gold EA Breakout këtu, ose merr paketat e reja nga GoldEA.ai me 5 robotë të tjerë — secili me strategji dhe timeframe të vet. Licenca aktivizohet vetë pas pagesës.</p>
+    </div>
+    <div class="pkgs" style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:26px">
+      <div class="pkg card" style="position:relative;padding:28px 26px;display:flex;flex-direction:column;gap:10px;border-radius:30px">
+          <div style="font-weight:800;font-size:16px;color:rgba(255,255,255,.8)">Gold EA Breakout</div>
+          <div style="font-size:44px;font-weight:900;letter-spacing:-.03em;line-height:1;">€350</div>
+          <div class="muted" style="font-size:13px">Një pagesë · licencë lifetime</div>
+          <div style="height:1px;background:rgba(255,255,255,.1);margin:8px 0"></div>
+          <div style="font-weight:700">1 robot · Breakout</div>
+          <div class="muted" style="font-size:14px">1 llogari MT5 · licenca me WhatsApp</div>
+          <div class="muted" style="font-size:13px">Rezultati +$111,103 në 6 muaj është i këtij roboti.</div>
+          <a class="pill pill-o" href="checkout.html"  style="margin-top:auto;height:50px;font-size:15px">Blije</a>
+        </div>
+      <div class="pkg card" style="position:relative;padding:28px 26px;display:flex;flex-direction:column;gap:10px;border-radius:30px">
+          <div style="font-weight:800;font-size:16px;color:rgba(255,255,255,.8)">Goldea Starter</div>
+          <div style="font-size:44px;font-weight:900;letter-spacing:-.03em;line-height:1;">€444</div>
+          <div class="muted" style="font-size:13px">Një pagesë · licencë lifetime</div>
+          <div style="height:1px;background:rgba(255,255,255,.1);margin:8px 0"></div>
+          <div style="font-weight:700">1 robot, zgjidhe ti nga 5</div>
+          <div class="muted" style="font-size:14px">1 llogari MT5 e përhershme</div>
+          
+          <a class="pill pill-o" href="https://app.goldea.ai/billing?interval=LIFETIME&amp;planTier=STARTER&amp;lang=en" target="_blank" rel="noopener" style="margin-top:auto;height:50px;font-size:15px">Blije</a>
+        </div>
+      <div class="pkg card gold" style="position:relative;padding:28px 26px;display:flex;flex-direction:column;gap:10px;border-radius:30px"><span style="position:absolute;top:-13px;left:24px;padding:5px 12px;border-radius:999px;background:linear-gradient(180deg,#FFF0B8,#E2AE3C);color:#1F1605;font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase">Më i kërkuari</span>
+          <div style="font-weight:800;font-size:16px;color:rgba(255,255,255,.8)">Goldea Pro</div>
+          <div style="font-size:44px;font-weight:900;letter-spacing:-.03em;line-height:1;color:#E8C76A">€888</div>
+          <div class="muted" style="font-size:13px">Një pagesë · licencë lifetime</div>
+          <div style="height:1px;background:rgba(255,255,255,.1);margin:8px 0"></div>
+          <div style="font-weight:700">Të 5 robotët</div>
+          <div class="muted" style="font-size:14px">5 llogari MT5 të përhershme</div>
+          
+          <a class="pill pill-g" href="https://app.goldea.ai/billing?interval=LIFETIME&amp;planTier=PRO&amp;lang=en" target="_blank" rel="noopener" style="margin-top:auto;height:50px;font-size:15px">Blije</a>
+        </div>
+      <div class="pkg card" style="position:relative;padding:28px 26px;display:flex;flex-direction:column;gap:10px;border-radius:30px">
+          <div style="font-weight:800;font-size:16px;color:rgba(255,255,255,.8)">Goldea Elite</div>
+          <div style="font-size:44px;font-weight:900;letter-spacing:-.03em;line-height:1;">€1,111</div>
+          <div class="muted" style="font-size:13px">Një pagesë · licencë lifetime</div>
+          <div style="height:1px;background:rgba(255,255,255,.1);margin:8px 0"></div>
+          <div style="font-weight:700">Të 5 robotët</div>
+          <div class="muted" style="font-size:14px">10 llogari MT5 të përhershme</div>
+          
+          <a class="pill pill-o" href="https://app.goldea.ai/billing?interval=LIFETIME&amp;planTier=ELITE&amp;lang=en" target="_blank" rel="noopener" style="margin-top:auto;height:50px;font-size:15px">Blije</a>
+        </div>
+    </div>
+    <p class="muted" style="margin:0 0 40px;font-size:13px">Paketat Starter / Pro / Elite paguhen dhe aktivizohen te GoldEA.ai (dashboard, udhëzues setup, kontroll pauzë/alarme). Breakout paguhet këtu dhe licencën e merr nga stafi në WhatsApp.</p>
+
+    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap">
+      <h3 style="margin:0;font-size:26px;letter-spacing:-.02em;font-weight:900">5 robotët e rinj te GoldEA.ai</h3>
+      <span class="muted" style="font-size:13px">Të gjithë për XAUUSD në MT5 · llogari hedging</span>
+    </div>
+    <div class="eas" style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px">
+      <a class="card ea" href="https://goldea.ai/eas/vision-ob" target="_blank" rel="noopener" style="padding:22px;display:flex;flex-direction:column;gap:8px;border-radius:26px">
+          <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:800;font-size:18px">OB Vision</span><span style="font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#E8C76A;border:1px solid rgba(232,194,98,.45);padding:4px 9px;border-radius:999px">H1</span></div>
+          <p class="muted" style="margin:0;font-size:14px;flex:1">Tregton order block-et në H1. Risk fiks $50 për trade, target 2.5R. Për ata që duan pak trade, por të pastra.</p>
+          <div style="font-size:13px"><span style="color:#4ADE80;font-weight:800">$1k → $5,058</span> <span class="muted">backtest 2024–26</span></div>
+          <span style="font-size:13px;font-weight:700;color:#8FB3FF">Detajet në goldea.ai ↗</span>
+        </a>
+      <a class="card ea" href="https://goldea.ai/eas/tp-hunter" target="_blank" rel="noopener" style="padding:22px;display:flex;flex-direction:column;gap:8px;border-radius:26px">
+          <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:800;font-size:18px">TP Hunter</span><span style="font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#E8C76A;border:1px solid rgba(232,194,98,.45);padding:4px 9px;border-radius:999px">M30</span></div>
+          <p class="muted" style="margin:0;font-size:14px;flex:1">M30, 0.01 lot fiks. Del me sinjale të programuara, jo me stop te brokeri. I qetë, i vazhdueshëm.</p>
+          <div style="font-size:13px"><span style="color:#4ADE80;font-weight:800">$1k → $10,755</span> <span class="muted">backtest 2024–26</span></div>
+          <span style="font-size:13px;font-weight:700;color:#8FB3FF">Detajet në goldea.ai ↗</span>
+        </a>
+      <a class="card ea" href="https://goldea.ai/eas/gold444-v4" target="_blank" rel="noopener" style="padding:22px;display:flex;flex-direction:column;gap:8px;border-radius:26px">
+          <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:800;font-size:18px">Gold EA 444</span><span style="font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#E8C76A;border:1px solid rgba(232,194,98,.45);padding:4px 9px;border-radius:999px">H1</span></div>
+          <p class="muted" style="margin:0;font-size:14px;flex:1">Versioni i ri i 444-ës. H1, 0.05 lot, dalje me kohë. Mos e ndiz bashkë me 444-ën e vjetër në të njëjtën llogari.</p>
+          <div style="font-size:13px"><span style="color:#4ADE80;font-weight:800">$1k → $3,765</span> <span class="muted">backtest 2024–26</span></div>
+          <span style="font-size:13px;font-weight:700;color:#8FB3FF">Detajet në goldea.ai ↗</span>
+        </a>
+      <a class="card ea" href="https://goldea.ai/eas/golden-cross" target="_blank" rel="noopener" style="padding:22px;display:flex;flex-direction:column;gap:8px;border-radius:26px">
+          <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:800;font-size:18px">Golden Cross</span><span style="font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#E8C76A;border:1px solid rgba(232,194,98,.45);padding:4px 9px;border-radius:999px">M10</span></div>
+          <p class="muted" style="margin:0;font-size:14px;flex:1">Kryqëzim mesataresh në M10, 0.05 lot. Më agresiv, më shumë trade — rezultati më i lartë në backtest.</p>
+          <div style="font-size:13px"><span style="color:#4ADE80;font-weight:800">$1k → $12,458</span> <span class="muted">backtest 2024–26</span></div>
+          <span style="font-size:13px;font-weight:700;color:#8FB3FF">Detajet në goldea.ai ↗</span>
+        </a>
+      <a class="card ea" href="https://goldea.ai/eas/ag-ultra" target="_blank" rel="noopener" style="padding:22px;display:flex;flex-direction:column;gap:8px;border-radius:26px">
+          <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:800;font-size:18px">AG Ultra</span><span style="font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#E8C76A;border:1px solid rgba(232,194,98,.45);padding:4px 9px;border-radius:999px">M3</span></div>
+          <p class="muted" style="margin:0;font-size:14px;flex:1">Scalper në M3, 0.10 lot. Pret derisa të mbyllet çdo pozicion tjetër në simbol. Win rate më i lartë, 62%.</p>
+          <div style="font-size:13px"><span style="color:#4ADE80;font-weight:800">$1k → $11,379</span> <span class="muted">backtest 2024–26</span></div>
+          <span style="font-size:13px;font-weight:700;color:#8FB3FF">Detajet në goldea.ai ↗</span>
+        </a>
+    </div>
+    <p class="muted" style="margin:16px 0 0;font-size:12px">Backtest-et janë nga krijuesi, 2024–2026, jo rezultate live. Rezultatet e mëparshme nuk garantojnë ato të ardhshme; tregtimi i automatizuar mund të humbasë para.</p>
   </section>
 
   <!-- KUSH JAM -->
