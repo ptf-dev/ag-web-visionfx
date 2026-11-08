@@ -42,15 +42,12 @@ h1 span{color:var(--gold)}
 .method:hover{border-color:rgba(232,194,98,.5);color:#fff}
 .method[aria-selected="true"]{border-color:rgba(232,194,98,.7);background:rgba(232,194,98,.14);color:#F1D98A;box-shadow:0 0 24px -6px rgba(232,194,98,.5)}
 .panel{display:none}.panel.on{display:block}
-.pay-btn{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;width:100%;height:58px;border-radius:999px;font:inherit;font-weight:800;font-size:16px;cursor:pointer;text-align:center;
- color:#FFF6DC;text-shadow:0 1px 2px rgba(0,0,0,.45),0 0 14px rgba(255,220,140,.55);
- background:linear-gradient(180deg,rgba(255,236,170,.62) 0%,rgba(232,194,98,.42) 38%,rgba(166,124,42,.38) 62%,rgba(255,220,140,.45) 100%),rgba(120,88,24,.35);
- border:1px solid rgba(255,228,150,.85);
- box-shadow:0 1px 0 rgba(255,255,255,.75) inset,0 -10px 24px -8px rgba(255,220,140,.55) inset,0 0 34px rgba(232,194,98,.55),0 18px 40px -12px rgba(201,162,74,.9);
- transition:transform .25s,box-shadow .25s,filter .25s}
+.pay-btn{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;width:100%;height:58px;border-radius:999px;font:inherit;font-weight:800;font-size:16px;cursor:pointer;text-align:center;color:#1F1605;text-shadow:0 1px 0 rgba(255,255,255,.45);background:linear-gradient(180deg,rgba(255,255,255,.62) 0%,rgba(255,255,255,.22) 42%,rgba(255,255,255,0) 50%,rgba(255,255,255,0) 100%),linear-gradient(180deg,#FFF0B8 0%,#F7D070 30%,#E2AE3C 55%,#B8842A 82%,#D9A845 100%);border:1px solid #FFF1C4;box-shadow:inset 0 2px 0 rgba(255,255,255,.95),inset 0 -4px 8px rgba(110,70,10,.55),inset 0 0 0 1px rgba(255,240,190,.5),0 0 0 1px #7A5A1A,0 0 28px rgba(247,208,112,.55),0 16px 34px -10px rgba(0,0,0,.85);transition:transform .25s,box-shadow .25s,filter .25s}
 .pay-btn::after{content:"";position:absolute;top:0;left:0;width:45%;height:100%;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.45),rgba(255,255,255,0));transform:translateX(-140%) skewX(-20deg);pointer-events:none}
 @keyframes sheen{0%{transform:translateX(-140%) skewX(-20deg)}100%{transform:translateX(240%) skewX(-20deg)}}
-.pay-btn:hover{transform:translateY(-2px);filter:brightness(1.06)}
+.pay-btn:hover{transform:translateY(-2px);box-shadow:inset 0 2px 0 rgba(255,255,255,1),inset 0 -4px 8px rgba(110,70,10,.55),inset 0 0 0 1px rgba(255,240,190,.6),0 0 0 1px #7A5A1A,0 0 48px rgba(247,208,112,.85),0 22px 44px -10px rgba(0,0,0,.9)}
+@keyframes shimmer{0%,55%{transform:translateX(-140%) skewX(-20deg)}100%{transform:translateX(260%) skewX(-20deg)}}
+.pay-btn:not([disabled])::after{animation:shimmer 3.2s ease-in-out infinite;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.75),rgba(255,255,255,0))}
 .pay-btn:hover::after{animation:sheen .9s ease forwards}
 .pay-btn[disabled]{opacity:.45;cursor:not-allowed;transform:none;filter:none}
 /* display:flex above outranks the UA rule for [hidden], so say it here or a

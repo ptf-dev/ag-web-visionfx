@@ -105,8 +105,12 @@ a{color:#fff;text-decoration:none}a:hover{color:#fff}
 .pill::after{content:"";position:absolute;top:0;left:0;width:45%;height:100%;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.45),rgba(255,255,255,0));transform:translateX(-140%) skewX(-20deg);pointer-events:none}
 .pill:hover::after{animation:sheen .9s ease forwards}
 .pill:hover{transform:translateY(-2px)}
-.pill-g{color:#FFF6DC;text-shadow:0 1px 2px rgba(0,0,0,.45),0 0 14px rgba(255,220,140,.55);background:linear-gradient(180deg,rgba(255,236,170,.62) 0%,rgba(232,194,98,.42) 38%,rgba(166,124,42,.38) 62%,rgba(255,220,140,.45) 100%),rgba(120,88,24,.35);backdrop-filter:blur(10px);border:1px solid rgba(255,228,150,.85);box-shadow:0 1px 0 rgba(255,255,255,.75) inset,0 -10px 24px -8px rgba(255,220,140,.55) inset,0 0 34px rgba(232,194,98,.55),0 18px 40px -12px rgba(201,162,74,.9)}
-.pill-g:hover{color:#fff;box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 -10px 24px -8px rgba(255,220,140,.7) inset,0 0 54px rgba(232,194,98,.8),0 26px 50px -12px rgba(201,162,74,1)}
+.pill-g{color:#1F1605;text-shadow:0 1px 0 rgba(255,255,255,.45);background:linear-gradient(180deg,rgba(255,255,255,.62) 0%,rgba(255,255,255,.22) 42%,rgba(255,255,255,0) 50%,rgba(255,255,255,0) 100%),linear-gradient(180deg,#FFF0B8 0%,#F7D070 30%,#E2AE3C 55%,#B8842A 82%,#D9A845 100%);border:1px solid #FFF1C4;box-shadow:inset 0 2px 0 rgba(255,255,255,.95),inset 0 -4px 8px rgba(110,70,10,.55),inset 0 0 0 1px rgba(255,240,190,.5),0 0 0 1px #7A5A1A,0 0 28px rgba(247,208,112,.55),0 16px 34px -10px rgba(0,0,0,.85)}
+.nav .pill-g,.nav .pill-g:hover{color:#1F1605;text-shadow:0 1px 0 rgba(255,255,255,.45)}
+.bub .pill-g{align-self:flex-start}
+.pill-g:hover{color:#1F1605;box-shadow:inset 0 2px 0 rgba(255,255,255,1),inset 0 -4px 8px rgba(110,70,10,.55),inset 0 0 0 1px rgba(255,240,190,.6),0 0 0 1px #7A5A1A,0 0 48px rgba(247,208,112,.85),0 22px 44px -10px rgba(0,0,0,.9);filter:brightness(1.04)}
+@keyframes shimmer{0%,55%{transform:translateX(-140%) skewX(-20deg)}100%{transform:translateX(260%) skewX(-20deg)}}
+.pill-g::after{animation:shimmer 3.2s ease-in-out infinite;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.75),rgba(255,255,255,0))}
 .pill-o{border:1px solid rgba(217,182,90,.35);color:#F1E3B8;background:rgba(217,182,90,.06)}.pill-o:hover{background:rgba(217,182,90,.14);border-color:rgba(217,182,90,.7);color:#fff}
 .wafix{position:fixed;right:28px;bottom:28px;z-index:50;display:flex;align-items:center;gap:12px;height:60px;padding:0 22px 0 10px;border-radius:999px;background:linear-gradient(180deg,#2EE37A,#1DB954);color:#06230f;font-weight:800;font-size:15px;box-shadow:0 18px 40px -10px rgba(29,185,84,.7),0 1px 0 rgba(255,255,255,.4) inset;animation:pulse 2.4s infinite;transition:transform .25s}
 .wafix:hover{transform:translateY(-3px) scale(1.03);color:#06230f}
@@ -167,7 +171,7 @@ a{color:#fff;text-decoration:none}a:hover{color:#fff}
         <h3 style="font-size: 44px; line-height: 1">Gold EA</h3>
         <p style="max-width: 50%; font-size: 16px">Tregton floririn vetë në MT5, 24/5. Ti e ndjek nga telefoni.</p>
         <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap"><span style="font-size: 40px; font-weight: 900; letter-spacing: -.03em; background: linear-gradient(180deg, #FFF3CC, #E8C76A 60%, #B8862E); -webkit-background-clip: text; background-clip: text; color: transparent">+$111,103</span><span class="muted" style="font-size: 14px">fitim në 6 muaj, llogari reale</span></div>
-        <span style="display: inline-flex; align-items: center; justify-content: center; height: 50px; padding: 0 22px; border-radius: 999px; width: max-content; font-size: 15px; font-weight: 800; color: #1A1407; background: linear-gradient(180deg, #FFF1C4, #E8C76A 55%, #B8862E); box-shadow: 0 1px 0 rgba(255,255,255,.7) inset, 0 14px 30px -8px rgba(232,194,98,.9)">Blije këtu · €350 · paguan njëherë →</span>
+        <span class="pill pill-g" style="height: 50px; padding: 0 22px; font-size: 15px">Blije këtu · €350 · paguan njëherë →</span>
       </a>
 
       <!-- KURSI -->
