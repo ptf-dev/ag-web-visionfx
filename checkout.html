@@ -1,147 +1,163 @@
 <!doctype html>
-<html lang="en">
+<html lang="sq">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Checkout — Paketa Premium + Gold EA Vision</title>
+<title>Checkout — Gold EA · €350 lifetime</title>
 <meta name="robots" content="noindex" />
+<meta name="theme-color" content="#0A0D14">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg-0:#08070a;
-  --bg-1:#0d0b0e;
-  --ink:#f6efe0;
-  --ink-dim:#b6ac97;
-  --ink-mute:#7a7364;
-  --gold:#e6b45a;
-  --gold-hi:#f7dfa2;
-  --ice:#a9c8ec;
-  --line:rgba(230,180,90,.16);
-  --line-strong:rgba(230,180,90,.38);
-  --glass:rgba(22,19,17,.55);
-  --ok:#7fd1a3;
-  --bad:#e08b7a;
-  --sans:"Manrope",ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;
-  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
-}
+:root{--bg:#0A0D14;--ink:#fff;--muted:rgba(255,255,255,.68);--gold:#E8C76A;--gold-d:#C9A24A;--ok:#4ADE80;--bad:#FF7A6B}
 *{box-sizing:border-box}
-body{
-  margin:0;min-height:100dvh;background:var(--bg-0);color:var(--ink);
-  font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased;
-  display:flex;align-items:flex-start;justify-content:center;padding:2rem 1rem 4rem;
-}
-.wrap{width:100%;max-width:520px}
-.back{
-  display:inline-block;margin-bottom:1.5rem;color:var(--ink-mute);
-  font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;
-}
-.back:hover{color:var(--gold-hi)}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100dvh;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;
+ background-image:radial-gradient(800px 400px at 70% -10%,rgba(232,194,98,.18),rgba(232,194,98,0) 60%)}
+a{color:#fff;text-decoration:none}
+.wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+.muted{color:var(--muted)}
+header{border-bottom:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(28,22,10,.92),rgba(10,13,20,.86));backdrop-filter:blur(18px)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
+.brand{font-weight:800;font-size:18px;color:#F6EBC8}.brand span{color:#D9B65A}
+.secure-top{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.layout{display:grid;grid-template-columns:1fr 440px;gap:32px;align-items:start;padding:36px 0 80px}
+.card{position:relative;background:radial-gradient(120% 80% at 18% 0%,rgba(255,255,255,.12),rgba(255,255,255,0) 55%),linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.1);border-radius:28px;box-shadow:0 30px 60px -36px rgba(0,0,0,1),inset 0 1px 0 rgba(255,255,255,.14)}
+.card.gold{border-color:rgba(232,194,98,.45);box-shadow:0 40px 90px -40px rgba(232,194,98,.4),0 30px 60px -36px rgba(0,0,0,1),inset 0 1px 0 rgba(255,236,170,.3)}
+h1{margin:0;font-size:42px;line-height:1;letter-spacing:-.03em;font-weight:900}
+h1 span{color:var(--gold)}
+.li{display:flex;gap:12px;align-items:flex-start;font-size:15px}
+.li svg{flex:0 0 auto;margin-top:2px}
 
-.summary{
-  border:1px solid var(--line);border-radius:16px;background:var(--glass);
-  padding:1.25rem;margin-bottom:1.5rem;display:flex;gap:1rem;align-items:center;
-}
-.summary img{width:56px;height:56px;border-radius:10px;object-fit:cover;flex:0 0 auto}
-.summary h1{margin:0 0 .25rem;font-size:1rem;font-weight:700;letter-spacing:-.01em}
-.summary .meta{font-size:.8rem;color:var(--ink-dim)}
-.summary .price{margin-left:auto;font-family:var(--mono);font-size:1.15rem;color:var(--gold-hi);font-weight:600}
-
-h2{
-  font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--ink-mute);margin:0 0 .75rem;font-weight:500;
-}
-
-.methods{display:flex;gap:.5rem;margin-bottom:1.25rem}
-.method{
-  flex:1;padding:.7rem .5rem;border-radius:11px;border:1px solid var(--line);
-  background:transparent;color:var(--ink-dim);cursor:pointer;
-  font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
-  transition:all .22s cubic-bezier(.2,.7,.2,1);
-}
-.method:hover{border-color:var(--line-strong);color:var(--ink)}
-.method[aria-selected="true"]{
-  border-color:var(--line-strong);color:var(--gold-hi);background:rgba(230,180,90,.1);
-}
-
-.panel{display:none}
-.panel.on{display:block}
-
-.pay-btn{
-  display:block;width:100%;text-align:center;text-decoration:none;cursor:pointer;
-  padding:.95rem 1rem;border-radius:12px;border:1px solid var(--line-strong);
-  background:linear-gradient(180deg,rgba(230,180,90,.16),rgba(230,180,90,.06));
-  color:var(--gold-hi);font-family:var(--mono);font-size:12px;letter-spacing:.1em;
-  text-transform:uppercase;font-weight:500;transition:all .22s cubic-bezier(.2,.7,.2,1);
-}
-.pay-btn:hover{background:rgba(230,180,90,.2)}
-.pay-btn[disabled]{opacity:.45;cursor:not-allowed}
-/* display:block above outranks the UA rule for [hidden], so say it here or a
+/* ---- payment card ---- */
+.summary{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.summary img{width:56px;height:56px;border-radius:14px;object-fit:cover;flex:0 0 auto}
+.summary h2{margin:0;font-size:16px;font-weight:800}
+.summary .meta{font-size:13px;color:var(--muted)}
+.summary .price{margin-left:auto;font-size:26px;font-weight:800;color:var(--gold);letter-spacing:-.02em}
+.label{font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.5);margin:0 0 10px}
+.methods{display:flex;gap:8px;margin-bottom:18px}
+.method{flex:1;height:52px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.03);color:rgba(255,255,255,.75);font:inherit;font-weight:700;font-size:15px;cursor:pointer;transition:all .22s}
+.method:hover{border-color:rgba(232,194,98,.5);color:#fff}
+.method[aria-selected="true"]{border-color:rgba(232,194,98,.7);background:rgba(232,194,98,.14);color:#F1D98A;box-shadow:0 0 24px -6px rgba(232,194,98,.5)}
+.panel{display:none}.panel.on{display:block}
+.pay-btn{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;width:100%;height:58px;border-radius:999px;font:inherit;font-weight:800;font-size:16px;cursor:pointer;text-align:center;
+ color:#FFF6DC;text-shadow:0 1px 2px rgba(0,0,0,.45),0 0 14px rgba(255,220,140,.55);
+ background:linear-gradient(180deg,rgba(255,236,170,.62) 0%,rgba(232,194,98,.42) 38%,rgba(166,124,42,.38) 62%,rgba(255,220,140,.45) 100%),rgba(120,88,24,.35);
+ border:1px solid rgba(255,228,150,.85);
+ box-shadow:0 1px 0 rgba(255,255,255,.75) inset,0 -10px 24px -8px rgba(255,220,140,.55) inset,0 0 34px rgba(232,194,98,.55),0 18px 40px -12px rgba(201,162,74,.9);
+ transition:transform .25s,box-shadow .25s,filter .25s}
+.pay-btn::after{content:"";position:absolute;top:0;left:0;width:45%;height:100%;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.45),rgba(255,255,255,0));transform:translateX(-140%) skewX(-20deg);pointer-events:none}
+@keyframes sheen{0%{transform:translateX(-140%) skewX(-20deg)}100%{transform:translateX(240%) skewX(-20deg)}}
+.pay-btn:hover{transform:translateY(-2px);filter:brightness(1.06)}
+.pay-btn:hover::after{animation:sheen .9s ease forwards}
+.pay-btn[disabled]{opacity:.45;cursor:not-allowed;transform:none;filter:none}
+/* display:flex above outranks the UA rule for [hidden], so say it here or a
    hidden pay button stays on screen. */
 .pay-btn[hidden]{display:none}
-
-.hint{margin-top:.75rem;font-size:.78rem;color:var(--ink-mute)}
+[hidden]{display:none!important}
+.hint{margin:12px 0 0;font-size:13px;color:var(--muted)}
 #pok-form{margin-top:1rem}
 #pok-form:empty{margin-top:0}
-
-.note{
-  margin-top:1rem;padding:.8rem .9rem;border-radius:11px;font-size:.82rem;
-  border:1px solid var(--line);background:rgba(230,180,90,.05);color:var(--ink-dim);
-}
-.note.err{border-color:rgba(224,139,122,.4);background:rgba(224,139,122,.08);color:var(--bad)}
-.note.ok{border-color:rgba(127,209,163,.4);background:rgba(127,209,163,.08);color:var(--ok)}
+.note{margin:14px 0 0;padding:12px 14px;border-radius:14px;font-size:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:var(--muted)}
+.note.err{border-color:rgba(255,122,107,.45);background:rgba(255,122,107,.08);color:var(--bad)}
+.note.ok{border-color:rgba(74,222,128,.45);background:rgba(74,222,128,.08);color:var(--ok)}
 .note[hidden]{display:none}
-
-.secure{
-  margin-top:1.5rem;text-align:center;font-family:var(--mono);
-  font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-mute);
-}
+.alt{margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.1);display:flex;flex-direction:column;gap:8px}
+.alt a{display:flex;justify-content:space-between;font-size:14px;color:var(--muted)}
+.alt a:hover{color:#fff}
+.secure{margin-top:16px;text-align:center;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45)}
+@media (max-width:900px){.layout{grid-template-columns:1fr;padding-top:24px}.pay-card{order:-1}h1{font-size:34px}}
 </style>
 </head>
 <body>
-<div class="wrap">
+<header>
+  <div class="wrap">
+    <a class="brand" href="/">Anduel Gega<span>.</span></a>
+    <div class="secure-top"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" stroke-width="2" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Pagesë e sigurt</div>
+  </div>
+</header>
 
-  <a class="back" href="index.html">&larr; Back</a>
+<div class="wrap layout">
 
-  <div class="summary">
-    <img src="images/gold-ea-thumb.webp" width="56" height="56" alt="" />
-    <div>
-      <h1>Paketa Premium + Gold EA Vision</h1>
-      <div class="meta">Lifetime access</div>
+  <main style="display:flex;flex-direction:column;gap:20px">
+    <a href="/" class="muted" style="font-size:14px">&larr; Kthehu te faqja</a>
+    <h1>Gold EA · <span>&euro;350</span> lifetime</h1>
+    <p class="muted" style="margin:0;font-size:17px">Paguan njëherë. Licenca dhe skedari i EA-s të vijnë me email brenda pak minutash.</p>
+
+    <div class="card" style="padding:22px;display:flex;gap:18px;align-items:center;flex-wrap:wrap">
+      <img src="images/gold-ea-6-muaj.jpg" alt="Historiku MT5 i Gold EA: fitim 111,102.89" style="width:150px;border-radius:14px;border:1px solid rgba(232,194,98,.35)">
+      <div style="flex:1;min-width:200px"><div style="font-size:30px;font-weight:800;color:#4ADE80;letter-spacing:-.02em">+$111,103</div><div class="muted" style="font-size:14px">fitim në 6 muaj, llogari reale (maj – tetor 2026)</div><div class="muted" style="font-size:12px;margin-top:8px">Rezultatet e mëparshme nuk garantojnë ato të ardhshme.</div></div>
     </div>
-    <div class="price">&euro;350</div>
-  </div>
 
-  <h2>Payment method</h2>
-  <div class="methods" role="tablist">
-    <button class="method" role="tab" aria-selected="true"  data-panel="paypal">PayPal</button>
-    <button class="method" role="tab" aria-selected="false" data-panel="pok">Card</button>
-    <button class="method" role="tab" aria-selected="false" data-panel="crypto">Crypto</button>
-  </div>
+    <div class="card" style="padding:24px">
+      <div style="font-weight:800;font-size:17px;margin-bottom:14px">Çfarë merr</div>
+      <div style="display:grid;gap:12px">
+        <div class="li"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E8C76A" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Gold EA (Breakout) për MetaTrader 5 — licencë për gjithë jetën, s'ka abonim</div>
+        <div class="li"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E8C76A" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Dashboard në telefon: çdo trade, fitimi i ditës, njoftime</div>
+        <div class="li"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E8C76A" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Udhëzues instalimi me video (10 minuta) + cilësimet e rekomanduara</div>
+        <div class="li"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E8C76A" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Update-et falas gjithmonë + stafi të ndihmon në shqip</div>
+      </div>
+    </div>
 
-  <section class="panel on" id="panel-paypal">
-    <a class="pay-btn" href="https://www.paypal.com/ncp/payment/J4CL6SY9AAH9Y" target="_blank" rel="noopener">
-      Continue with PayPal
-    </a>
-    <p class="hint">You'll finish the payment on PayPal's secure page, then return here.</p>
-  </section>
+    <div class="card" style="padding:24px">
+      <div style="font-weight:800;font-size:17px;margin-bottom:10px">Pas pagesës</div>
+      <div class="muted" style="font-size:15px;display:grid;gap:8px">
+        <div><b style="color:#fff">1.</b> Të vjen email-i me licencën dhe skedarin e EA-s (shiko edhe spam-in).</div>
+        <div><b style="color:#fff">2.</b> E instalon në MT5 desktop ose VPS dhe vendos çelësin.</div>
+        <div><b style="color:#fff">3.</b> S'erdhi brenda 30 minutash? Na shkruaj në WhatsApp.</div>
+      </div>
+    </div>
+  </main>
 
-  <section class="panel" id="panel-pok">
-    <a class="pay-btn" id="pok-link" href="#" target="_blank" rel="noopener" hidden>Pay by card</a>
-    <p class="hint" id="pok-link-hint" hidden>You'll finish the payment on Pok's
-      secure page, then return here.</p>
-    <button class="pay-btn" id="pok-start">Pay by card</button>
-    <div id="pok-form"></div>
-    <p class="note" id="pok-note" hidden></p>
-  </section>
+  <aside class="card gold pay-card" style="padding:24px;position:sticky;top:20px" aria-label="Pagesa">
+    <div class="summary">
+      <img src="images/gold-ea-thumb.webp" width="56" height="56" alt="" />
+      <div>
+        <h2>Gold EA (Breakout)</h2>
+        <div class="meta">Licencë lifetime · MT5</div>
+      </div>
+      <div class="price">&euro;350</div>
+    </div>
 
-  <section class="panel" id="panel-crypto">
-    <a class="pay-btn" id="crypto-link" href="#" target="_blank" rel="noopener" hidden>Pay with crypto</a>
-    <button class="pay-btn" id="crypto-start">Pay with crypto</button>
-    <p class="hint">BTC, ETH, USDT and 100+ others. You'll finish on NowPayments'
-      secure page, then return here.</p>
-    <p class="note" id="crypto-note" hidden></p>
-  </section>
+    <p class="label">Mënyra e pagesës</p>
+    <div class="methods" role="tablist">
+      <button class="method" role="tab" aria-selected="true"  data-panel="paypal">PayPal</button>
+      <button class="method" role="tab" aria-selected="false" data-panel="pok">Kartë</button>
+      <button class="method" role="tab" aria-selected="false" data-panel="crypto">Kripto</button>
+    </div>
 
-  <p class="secure">Secure checkout &middot; PayPal &middot; Pok &middot; NowPayments</p>
+    <section class="panel on" id="panel-paypal">
+      <a class="pay-btn" href="https://www.paypal.com/ncp/payment/J4CL6SY9AAH9Y" target="_blank" rel="noopener">
+        Vazhdo me PayPal
+      </a>
+      <p class="hint">Pagesën e përfundon në faqen e sigurt të PayPal, pastaj kthehesh këtu.</p>
+    </section>
+
+    <section class="panel" id="panel-pok">
+      <a class="pay-btn" id="pok-link" href="#" target="_blank" rel="noopener" hidden>Paguaj me kartë</a>
+      <p class="hint" id="pok-link-hint" hidden>Pagesën e përfundon në faqen e sigurt të Pok,
+        pastaj kthehesh këtu.</p>
+      <button class="pay-btn" id="pok-start">Paguaj me kartë</button>
+      <div id="pok-form"></div>
+      <p class="note" id="pok-note" hidden></p>
+    </section>
+
+    <section class="panel" id="panel-crypto">
+      <a class="pay-btn" id="crypto-link" href="#" target="_blank" rel="noopener" hidden>Paguaj me kripto</a>
+      <button class="pay-btn" id="crypto-start">Paguaj me kripto</button>
+      <p class="hint">BTC, ETH, USDT dhe 100+ të tjera. E përfundon te NowPayments,
+        pastaj kthehesh këtu.</p>
+      <p class="note" id="crypto-note" hidden></p>
+    </section>
+
+    <div class="alt">
+      <a href="docs/bli-robotin-me-bank.html"><span>Bli me transfertë bankare (udhëzues)</span><span>&rarr;</span></a>
+      <a href="https://api.whatsapp.com/send/?phone=%2B355684446528&amp;type=phone_number&amp;app_absent=0" target="_blank" rel="noopener"><span>Pyet para blerjes në WhatsApp</span><span>&rarr;</span></a>
+    </div>
+    <p class="secure">Pagesë e sigurt &middot; PayPal &middot; Pok &middot; NowPayments</p>
+  </aside>
 
 </div>
 
