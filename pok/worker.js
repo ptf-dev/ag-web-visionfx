@@ -21,7 +21,7 @@
  * allowed to send an amount, anyone could open devtools and buy the package
  * for one euro.
  */
-const PRICE_EUR = 350;
+const PRICE_EUR = 444;
 
 /**
  * !! UNCONFIRMED — SET THIS BEFORE GOING LIVE !!
@@ -33,7 +33,7 @@ const PRICE_EUR = 350;
  *   dashboard shows EUR 1.00  → false (the API takes euros)
  *   dashboard shows EUR 0.01  → true  (the API takes cents)
  *
- * Wrong either way means charging EUR 3.50 or EUR 35,000 instead of EUR 350.
+ * Wrong either way means charging EUR 4.44 or EUR 44,400 instead of EUR 444.
  */
 const AMOUNT_IN_MINOR_UNITS = false;
 

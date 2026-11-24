@@ -76,7 +76,7 @@ Now open this order in POK Business → Pagesat online.
   shows €1.00   → major units. Leave AMOUNT_IN_MINOR_UNITS = false
   shows €0.01   → minor units. Set  AMOUNT_IN_MINOR_UNITS = true
 
-Both in pok/worker.js. Getting it wrong charges €3.50 or €35,000
-instead of €350, so read it off the dashboard rather than guessing.
+Both in pok/worker.js. Getting it wrong charges €4.44 or €44,400
+instead of €444, so read it off the dashboard rather than guessing.
 ────────────────────────────────────────────────────────────
 EOF

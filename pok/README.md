@@ -208,7 +208,7 @@ customer at PayPal, which never depends on it.
       show `"amount": 100` with `"currencyCode": "EUR"` and never say whether
       that means 100 euros or 100 cents. Run `./check-amount.sh` (below) and
       set `AMOUNT_IN_MINOR_UNITS` in `worker.js` from what the dashboard shows.
-      **Getting this wrong charges €3.50 or €35,000 instead of €350.**
+      **Getting this wrong charges €4.44 or €44,400 instead of €444.**
 - [ ] Run a full payment with a [test card](https://docs.pokpay.io/docs/pok-js#test-cards)
       (staging only — test cards do not work against production).
 - [ ] Set `POK_WEBHOOK_URL` and `POK_REDIRECT_URL` in `wrangler.toml`.
@@ -234,8 +234,8 @@ set one flag at the top of `worker.js` from what it shows:
 
 | Dashboard shows | `AMOUNT_IN_MINOR_UNITS` | Order sent as |
 |---|---|---|
-| **€1.00** | `false` (current default) | `350` |
-| **€0.01** | `true` | `35000` |
+| **€1.00** | `false` (current default) | `444` |
+| **€0.01** | `true` | `44400` |
 
 Do not skip this because the numbers look obvious — the whole point is that the
 docs do not say, and the default is a guess until someone checks.

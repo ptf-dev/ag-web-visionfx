@@ -24,14 +24,14 @@ import { createHmac, timingSafeEqual } from 'node:crypto';
  * allowed to send an amount, anyone could open devtools and buy the package
  * for one euro.
  */
-const PRICE_EUR = 350;
+const PRICE_EUR = 444;
 
 /**
  * Whether Pok's API wants euros or cents. Their docs show `"amount": 100`
  * with `"currencyCode": "EUR"` and never say which.
  *
  * Left at `false` deliberately: the two ways of being wrong are not equally
- * bad. At `false` a cents-based API would undercharge to EUR 3.50 — a loss,
+ * bad. At `false` a cents-based API would undercharge to EUR 4.44 — a loss,
  * caught on the first sale. At `true` a euro-based API would charge EUR
  * 35,000 to a real customer's card. So `false` is the fail-safe guess until
  * someone reads a real order in the dashboard (see pok/check-amount.sh).
